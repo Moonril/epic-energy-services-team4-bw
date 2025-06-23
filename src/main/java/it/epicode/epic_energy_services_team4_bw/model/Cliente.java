@@ -31,18 +31,17 @@ public class Cliente {
     private String telefono;
     @Column(name = "email_contatto")
     private String emailContatto;
-    private String nome;
-    private String cognome;
+    @Column(name = "nome_contatto")
+    private String nomeContatto;
+    @Column(name = "cognome_contatto")
+    private String cognomeContatto;
     @Column(name = "logo_url")
     private String logoAziendale;
     @Enumerated(EnumType.STRING)
     private TipoCliente tipoCliente;
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL)
     private List<Indirizzo> indirizzi;
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL)
     private List<Fatture> fatture=new ArrayList<>();
-
-
-
 
 }
