@@ -45,7 +45,7 @@ public class SecurityConfig {
         return httpSecurity.build();
     }
 
-    //password encoding. lo richiameremo nel metodo di creazione password
+
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder(10); // verrà applicato 10 volte
