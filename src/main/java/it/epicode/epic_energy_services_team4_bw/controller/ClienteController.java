@@ -20,14 +20,16 @@ public class ClienteController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
-    public Page<Cliente> getAllClienti(Pageable pageable) {
-        return clienteService.findAll(pageable);
+    public Page<Cliente> getAllClienti(@RequestParam(defaultValue = "0") int page,
+                                       @RequestParam(defaultValue = "10") int size,
+                                       @RequestParam(defaultValue = "id") String sortBy) {
+        return clienteService.findAllClienti(page, size, sortBy);
     }
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public Cliente getClienteById(@PathVariable int id) throws NotFoundException {
-        return clienteService.findById(id);
+        return clienteService.findClienteById(id);
     }
 
     @PostMapping
@@ -38,7 +40,7 @@ public class ClienteController {
             throw new ValidationException(bindingResult.getAllErrors().stream()
                     .map(objectError -> objectError.getDefaultMessage()).reduce("",(e,s)->e+s));
         }
-        return clienteService.save(clienteDTO);
+        return clienteService.saveCliente(clienteDTO);
     }
 
     @PutMapping("/{id}")
@@ -55,6 +57,6 @@ public class ClienteController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteCliente(@PathVariable int id) throws NotFoundException {
-        clienteService.delete(id);
+        clienteService.deleteCliente(id);
     }
 }
