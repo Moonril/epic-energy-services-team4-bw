@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
-public class ClientRequestDTO {
+public class ClienteRequestDTO {
     @NotBlank(message = "La ragione sociale non può essere vuota")
     @Size(min = 3,max = 100,message = "La ragione sociale dovrebbe avere tra i 3 e i 100 caratteri")
     private String ragioneSociale;
