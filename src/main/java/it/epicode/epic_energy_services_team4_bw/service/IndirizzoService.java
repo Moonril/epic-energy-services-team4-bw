@@ -3,6 +3,7 @@ package it.epicode.epic_energy_services_team4_bw.service;
 import com.cloudinary.Cloudinary;
 
 import it.epicode.epic_energy_services_team4_bw.dto.IndirizzoDto;
+import it.epicode.epic_energy_services_team4_bw.exception.NotFoundException;
 import it.epicode.epic_energy_services_team4_bw.model.Comune;
 import it.epicode.epic_energy_services_team4_bw.model.Indirizzo;
 import it.epicode.epic_energy_services_team4_bw.repository.IndirizzoRepository;
@@ -32,7 +33,7 @@ public class IndirizzoService {
     private JavaMailSenderImpl javaMailSender;
 
     //Metodo Save
-    public Indirizzo saveIndirizzo(IndirizzoDto indirizzoDto) {
+    public Indirizzo saveIndirizzo(IndirizzoDto indirizzoDto) throws NotFoundException {
         Indirizzo indirizzo = new Indirizzo();
         indirizzo.setVia(indirizzoDto.getVia());
         indirizzo.setCivico(indirizzoDto.getCivico());
@@ -56,20 +57,20 @@ public class IndirizzoService {
 
     //Metodo get indirizzo
 
-    public Indirizzo getIndirizzo(int id) throws ChangeSetPersister.NotFoundException {
+    public Indirizzo getIndirizzo(int id) throws NotFoundException {
         return indirizzoRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Indirizzo con id: " + id + " non trovato"));
     }
 
     //Metodo update
-    public Indirizzo updateIndirizzo(int id, IndirizzoDto indirizzoDto) throws ChangeSetPersister.NotFoundException {
+    public Indirizzo updateIndirizzo(int id, IndirizzoDto indirizzoDto) throws NotFoundException {
         Indirizzo indirizzoDaAggiornare = getIndirizzo(id);
         return indirizzoRepository.save(indirizzoDaAggiornare);
 
     }
 
     //metodo delete indirizzo
-    public void deleteIndirizzo(int id) throws ChangeSetPersister.NotFoundException {
+    public void deleteIndirizzo(int id) throws NotFoundException {
         Indirizzo indirizzoDaRimuovere = getIndirizzo(id);
         indirizzoRepository.delete(indirizzoDaRimuovere);
     }

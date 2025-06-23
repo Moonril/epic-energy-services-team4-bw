@@ -3,6 +3,7 @@ package it.epicode.epic_energy_services_team4_bw.controller;
 
 
 import it.epicode.epic_energy_services_team4_bw.dto.IndirizzoDto;
+import it.epicode.epic_energy_services_team4_bw.exception.NotFoundException;
 import it.epicode.epic_energy_services_team4_bw.model.Indirizzo;
 import it.epicode.epic_energy_services_team4_bw.service.IndirizzoService;
 import jakarta.validation.ValidationException;
@@ -28,7 +29,7 @@ public class IndirizzoController {
     //per gestire la validazione, devo aggiungere @Validated al dto e poi il metodo deve gestire anche il
     //parametro di tipo BindingResult che conterrà tutti gli eventuali errori del dto
     public Indirizzo saveIndirizzo(@RequestBody @Validated IndirizzoDto indirizzoDto,
-                                     BindingResult bindingResult) throws NotFoundException, ValidationException {
+                                     BindingResult bindingResult) throws NotFoundException, ValidationException, NotFoundException {
         if(bindingResult.hasErrors()){
             //gli errori li prendiamo dal bindingResult ma vengono restituiti come liste di objectError.
             //il costruttore dell'eccezione accetta una stringa e quindi con lo stream trasformiamo la lista in una stringa

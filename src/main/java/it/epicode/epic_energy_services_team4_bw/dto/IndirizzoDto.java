@@ -13,7 +13,7 @@ public class IndirizzoDto {
     @NotEmpty(message = "La località dell'indirizzo non può essere vuota")
     private String localita;
     @NotNull(message = "Il comune deve essere specificato")
-    private Long comuneId;
+    private int comuneId;
     @NotEmpty(message = "Il cap dev'essere specificato")
     private String cap;
 }
