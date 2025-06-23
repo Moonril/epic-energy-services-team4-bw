@@ -13,7 +13,7 @@ public class ProvinciaDto {
     private String regione;
 
     //collegamenti, non sono sicura che serva
-    private int comuniId;
+    // private int comuneId;
 
 
 }
