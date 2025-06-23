@@ -1,7 +1,6 @@
 package it.epicode.epic_energy_services_team4_bw.dto;
 
 import it.epicode.epic_energy_services_team4_bw.enums.TipoCliente;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -43,7 +42,7 @@ import java.util.List;
         @NotNull(message = "Il tipo cliente non può essere nullo")
         private TipoCliente tipoCliente;
         private String logoAziendaleUrl;
-        private List<IndirizzoDTO> indirizzi;
+        private List<IndirizzoDto> indirizzi;
         private List<FattureDto> fatture;
     }
 
