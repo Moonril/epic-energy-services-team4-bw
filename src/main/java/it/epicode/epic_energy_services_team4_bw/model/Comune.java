@@ -5,5 +5,5 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Utente {
+public class Comune {
 }
