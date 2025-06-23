@@ -4,6 +4,7 @@ package it.epicode.epic_energy_services_team4_bw.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -22,6 +23,6 @@ public class Comune {
     private Provincia provincia;
 
     @OneToMany(mappedBy = "comune")
-    private List<Indirizzo> indirizzi;
+    private List<Indirizzo> indirizzi = new ArrayList<>();
 
 }

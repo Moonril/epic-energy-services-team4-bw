@@ -1,6 +1,7 @@
 package it.epicode.epic_energy_services_team4_bw.security;
 
 
+import it.epicode.epic_energy_services_team4_bw.exception.UnauthorizedException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,7 +1,7 @@
 package it.epicode.epic_energy_services_team4_bw.service;
 
 import it.epicode.epic_energy_services_team4_bw.dto.ProvinciaDto;
-import it.epicode.epic_energy_services_team4_bw.model.Comune;
+import it.epicode.epic_energy_services_team4_bw.exception.NotFoundException;
 import it.epicode.epic_energy_services_team4_bw.model.Provincia;
 import it.epicode.epic_energy_services_team4_bw.repository.ProvinciaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,14 +38,14 @@ public class ProvinciaService {
     }
 
     public Provincia updateProvincia(int id, ProvinciaDto provinciaDto) throws NotFoundException{
-        Provincia provinciaDaAggiornate = getProvincia(id);
+        Provincia provinciaDaAggiornare = getProvincia(id);
 
-        provinciaDaAggiornate.setNome(provinciaDto.getNome());
-        provinciaDaAggiornate.setSigla(provinciaDto.getSigla());
-        provinciaDaAggiornate.setRegione(provinciaDto.getRegione());
+        provinciaDaAggiornare.setNome(provinciaDto.getNome());
+        provinciaDaAggiornare.setSigla(provinciaDto.getSigla());
+        provinciaDaAggiornare.setRegione(provinciaDto.getRegione());
 
 
-        return provinciaRepository.save(provinciaDaAggiornate);
+        return provinciaRepository.save(provinciaDaAggiornare);
     }
 
     public void deleteProvincia(int id) throws NotFoundException{
