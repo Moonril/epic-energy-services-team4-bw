@@ -31,7 +31,7 @@ public class ClienteService {
         return convertToDTO(cliente);
     }
 
-    public ClienteDTO save(ClienteDTO clienteDTO) { // AGGIORNATO
+    public ClienteDTO save(ClienteDTO clienteDTO) {
         clienteRepository.findByPartitaIva(clienteDTO.getPartitaIva()).ifPresent(cliente -> {
             throw new BadRequestException("Partita IVA " + clienteDTO.getPartitaIva() + " già esistente.");
         });
@@ -41,7 +41,7 @@ public class ClienteService {
         return convertToDTO(savedCliente);
     }
 
-    public ClienteDTO update(int id, ClienteDTO clienteDTO) throws NotFoundException { // AGGIORNATO
+    public ClienteDTO update(int id, ClienteDTO clienteDTO) throws NotFoundException {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Cliente con id=" + id + " non trovato."));
 
