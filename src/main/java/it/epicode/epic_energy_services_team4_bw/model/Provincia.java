@@ -6,4 +6,5 @@ import lombok.Data;
 @Data
 @Entity
 public class Provincia {
+
 }
