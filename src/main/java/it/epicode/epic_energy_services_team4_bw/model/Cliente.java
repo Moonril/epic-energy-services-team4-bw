@@ -40,7 +40,7 @@ public class Cliente {
     @Enumerated(EnumType.STRING)
     private TipoCliente tipoCliente;
     @OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL)
-    private List<Indirizzo> indirizzi;
+    private List<Indirizzo> indirizzi=new ArrayList<>();
     @OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL)
     private List<Fatture> fatture=new ArrayList<>();
 
