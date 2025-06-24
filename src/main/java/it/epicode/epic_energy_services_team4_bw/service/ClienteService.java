@@ -18,11 +18,15 @@ public class ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+
     @Transactional(readOnly = true)
     public Page<Cliente> findAllClienti(int page, int size, String sortBy) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return clienteRepository.findAll(pageable);
     }
+
+
     @Transactional(readOnly = true)
     public Cliente findClienteById(int id) throws NotFoundException {
         return clienteRepository.findById(id)
