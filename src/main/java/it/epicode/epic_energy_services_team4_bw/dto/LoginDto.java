@@ -6,9 +6,8 @@ import lombok.Data;
 
 @Data
 public class LoginDto {
-    @NotEmpty(message = "L'email non può essere vuota")
-    @Email
-    private String email;
-    @NotEmpty(message = "La password non può essere vuota")
+    @NotEmpty(message = "Il campo 'username' non può essere vuoto")
+    private String username;
+    @NotEmpty(message = "Il campo 'password' non può essere vuoto")
     private String password;
 }
