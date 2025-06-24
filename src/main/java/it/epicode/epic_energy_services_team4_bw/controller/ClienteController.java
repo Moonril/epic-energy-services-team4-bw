@@ -14,6 +14,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
 public class ClienteController {
     @Autowired
     private ClienteService clienteService;
@@ -24,6 +28,17 @@ public class ClienteController {
                                        @RequestParam(defaultValue = "10") int size,
                                        @RequestParam(defaultValue = "id") String sortBy) {
         return clienteService.findAllClienti(page, size, sortBy);
+    }
+
+    @GetMapping("/filtro")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public List<Cliente> filtraClienti(
+            @RequestParam BigDecimal fatturatoMin,
+            @RequestParam LocalDate dataInserimento,
+            @RequestParam LocalDate dataUltimoContatto,
+            @RequestParam String parteNome
+            ){
+        return clienteService.filtraClienti(fatturatoMin, dataInserimento, dataUltimoContatto, parteNome);
     }
 
     @GetMapping("/{id}")
