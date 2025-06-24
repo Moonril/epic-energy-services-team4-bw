@@ -24,7 +24,7 @@ public class FattureDto {
 
     @NotNull(message = "Il numero fattura non può essere nullo")
     @Size(min = 1, max = 50, message = "Il numero fattura deve avere tra 1 e 50 caratteri")
-    private String numero;
+    private int numero;
 
     @NotNull(message = "L'ID del cliente non può essere nullo")
     private Long clienteId;
@@ -36,7 +36,7 @@ public class FattureDto {
     public  FattureDto() {
     }
 
-    public  FattureDto(Long id, LocalDate data, BigDecimal importo, String numero, Long clienteId, StatoFattura stato) {
+    public  FattureDto(Long id, LocalDate data, BigDecimal importo, int numero, Long clienteId, StatoFattura stato) {
         this.id = id;
         this.data = data;
         this.importo = importo;

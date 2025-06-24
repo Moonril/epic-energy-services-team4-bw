@@ -14,13 +14,13 @@ import java.util.Optional;
 
 @Repository
 public interface FattureRepository extends JpaRepository<Fatture, Long> {
-    Optional<Fatture> findByNumero(String numero);
+    Optional<Fatture> findByNumero(int numero);
 
     Page<Fatture> findByStato(StatoFattura stato, Pageable pageable);
 
     Page<Fatture> findByData(LocalDate data, Pageable pageable);
 
-    @Query("SELECT f FROM Fattura f WHERE FUNCTION('YEAR', f.data) = :anno")
+    @Query("SELECT f FROM Fatture f WHERE FUNCTION('YEAR', f.data) = :anno")
     Page<Fatture> findByAnno(@Param("anno") int anno, Pageable pageable);
 
 
@@ -36,6 +36,6 @@ public interface FattureRepository extends JpaRepository<Fatture, Long> {
     Page<Fatture> findByStatoAndData(StatoFattura stato, LocalDate data, Pageable pageable);
 
 
-    @Query("SELECT COUNT(f) > 0 FROM Fattura f WHERE f.numero = :numero AND (:id IS NULL OR f.id <> :id)")
+    @Query("SELECT COUNT(f) > 0 FROM Fatture f WHERE f.numero = :numero AND (:id IS NULL OR f.id <> :id)")
     boolean existsByNumeroAndIdNot(@Param("numero") String numero, @Param("id") Long id);
 }
