@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @Repository
 public interface FattureRepository extends JpaRepository<Fatture, Long> {
-    Optional<Fatture> findByNumero(int numero);
+    Optional<Fatture> findByNumero(String numero);
 
     Page<Fatture> findByStato(StatoFattura stato, Pageable pageable);
 
