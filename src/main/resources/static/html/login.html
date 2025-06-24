@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #e8f0ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .login-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 255, 0.1);
+            width: 300px;
+        }
+
+        label {
+            color: #003366;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 8px;
+            margin: 8px 0 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #0052a3;
+        }
+    </style>
+
+    <script>
+        async function inviaDati() {
+            let username = document.getElementById("username").value;
+            let password = document.getElementById("password").value;
+            console.log(username);
+            console.log(password);
+
+            const url = "http://localhost:8080/auth/login";
+            try {
+                const request = new Request(url, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ "username": username, "password": password }),
+                });
+
+                const response = await fetch(request);
+                if (!response.ok) {
+                    throw new Error(`Response status: ${response.status}`);
+                }
+
+                const text = await response.text();
+                console.log(text);
+            } catch (error) {
+                console.error(error.message);
+            }
+        }
+    </script>
+</head>
+<body>
+
+<div class="login-container">
+    <label for="username">Username</label>
+    <input id="username" name="username" type="text">
+
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password">
+
+    <button onclick="inviaDati()">Login</button>
+</div>
+
+</body>
+</html>

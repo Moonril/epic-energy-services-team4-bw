@@ -3,6 +3,7 @@ package it.epicode.epic_energy_services_team4_bw.model;
 import it.epicode.epic_energy_services_team4_bw.enums.StatoFattura;
 import jakarta.persistence.*;
 import lombok.Data;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
