@@ -17,6 +17,7 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
@@ -59,6 +60,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return new AntPathMatcher().match("/auth/**", request.getServletPath());
+        String[] excludedEndpoints = new String[] {"/auth/**", "/html/**"};
+
+        return Arrays.stream(excludedEndpoints)
+                .anyMatch(e -> new AntPathMatcher().match(e, request.getServletPath()));
     }
 }
