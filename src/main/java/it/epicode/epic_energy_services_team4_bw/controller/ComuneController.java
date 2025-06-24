@@ -60,4 +60,11 @@ public class ComuneController {
     public void deleteComune(@PathVariable int id) throws NotFoundException {
         comuneService.deleteComune(id);
     }
+
+    @PostMapping("/import")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String importaComuni() {
+        comuneService.importaComuni();
+        return "Comuni importati!";
+    }
 }
