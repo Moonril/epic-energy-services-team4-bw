@@ -78,7 +78,7 @@ public class FattureService {
         Fatture fattura = fattureRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Fattura con id=" + id + " non trovata."));
 
-        if (fattureRepository.existsByNumeroAndIdNot(fatturaDto.getNumero(), id)) {
+        if (fattureRepository.existsByNumeroAndIdNot(String.valueOf(fatturaDto.getNumero()), id)) {
             throw new BadRequestException("Numero fattura '" + fatturaDto.getNumero() + "' già esistente per un'altra fattura.");
         }
 
