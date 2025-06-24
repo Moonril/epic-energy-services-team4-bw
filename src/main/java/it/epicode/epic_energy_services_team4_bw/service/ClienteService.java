@@ -87,11 +87,10 @@ public class ClienteService {
         } else if (dataUltimoContatto != null) {
             return clienteRepository.findByDataUltimoContattoAfter(dataUltimoContatto);
         } else if (parteNome != null && !parteNome.isEmpty()) {
-            return clienteRepository.findByNomeContainingIgnoreCase(parteNome);
+            return clienteRepository.findByRagioneSocialeContainingIgnoreCase(parteNome);
         } else {
             return clienteRepository.findAll();
         }
     }
     }
 
-}

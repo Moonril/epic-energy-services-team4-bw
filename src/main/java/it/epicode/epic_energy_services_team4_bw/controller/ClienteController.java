@@ -18,6 +18,8 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
+@RestController
+@RequestMapping(path = "/clienti")
 public class ClienteController {
     @Autowired
     private ClienteService clienteService;

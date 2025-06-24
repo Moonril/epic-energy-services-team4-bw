@@ -197,7 +197,6 @@ public class FattureService {
      */
     private FattureDto convertToDTO(Fatture fattura) {
         FattureDto dto = new FattureDto();
-        dto.setId(fattura.getId());
         dto.setData(fattura.getData());
         dto.setImporto(fattura.getImporto());
         dto.setNumero(fattura.getNumero());
@@ -220,7 +219,6 @@ public class FattureService {
      */
     private Fatture convertToEntity(FattureDto dto) throws NotFoundException, BadRequestException {
         Fatture fattura = new Fatture();
-        Optional.ofNullable(dto.getId()).ifPresent(fattura::setId);
         fattura.setData(dto.getData());
         fattura.setImporto(dto.getImporto());
         fattura.setNumero(dto.getNumero());
