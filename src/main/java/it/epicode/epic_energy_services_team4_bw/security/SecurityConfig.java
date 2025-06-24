@@ -33,6 +33,9 @@ public class SecurityConfig {
         // non ho capito. serve per bloccare richiesta da indirizzi ip e porte diversi da dove si trova il servizio
         httpSecurity.cors(Customizer.withDefaults());
 
+        // sblocca login.html
+        httpSecurity.authorizeHttpRequests(http -> http.requestMatchers("/login.html").permitAll());
+
         // prevede la approvazione o negazione di un servizio endpoint
         httpSecurity.authorizeHttpRequests(http->http.requestMatchers("/auth/**").permitAll());
 //        httpSecurity.authorizeHttpRequests(http->http.requestMatchers(HttpMethod.GET,"/studenti/**").permitAll());
