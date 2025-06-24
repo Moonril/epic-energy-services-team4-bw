@@ -21,7 +21,7 @@ public interface ClienteRepository extends JpaRepository<Cliente,Integer>, JpaSp
     List<Cliente> findByFatturatoAnnualeGreaterThanEqual(BigDecimal fatturatoMin);
     List<Cliente> findByDataInserimentoAfter(LocalDate data);
     List<Cliente> findByDataUltimoContattoAfter(LocalDate data);
-    List<Cliente> findByNomeContainingIgnoreCase(String parteNome);
+    List<Cliente> findByRagioneSocialeContainingIgnoreCase(String parteNome);
 
 
 

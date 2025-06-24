@@ -21,7 +21,7 @@ public class Fatture {
     private BigDecimal importo;
 
     @Column(nullable = false, unique = true)
-    private int numero;
+    private String numero;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id", nullable = false)
@@ -34,7 +34,7 @@ public class Fatture {
     public Fatture() {
     }
 
-    public Fatture(LocalDate data, BigDecimal importo, int numero, Cliente cliente, StatoFattura stato) {
+    public Fatture(LocalDate data, BigDecimal importo, String numero, Cliente cliente, StatoFattura stato) {
         this.data = data;
         this.importo = importo;
         this.numero = numero;
