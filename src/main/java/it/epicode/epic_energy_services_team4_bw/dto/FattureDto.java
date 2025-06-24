@@ -12,7 +12,6 @@ import java.time.LocalDate;
 @Data
 public class FattureDto {
 
-    private Long id;
 
     @NotNull(message = "La data non può essere nulla")
     @PastOrPresent(message = "La data non può essere nel futuro")
@@ -24,7 +23,7 @@ public class FattureDto {
 
     @NotNull(message = "Il numero fattura non può essere nullo")
     @Size(min = 1, max = 50, message = "Il numero fattura deve avere tra 1 e 50 caratteri")
-    private int numero;
+    private String numero;
 
     @NotNull(message = "L'ID del cliente non può essere nullo")
     private Long clienteId;
@@ -36,8 +35,7 @@ public class FattureDto {
     public  FattureDto() {
     }
 
-    public  FattureDto(Long id, LocalDate data, BigDecimal importo, int numero, Long clienteId, StatoFattura stato) {
-        this.id = id;
+    public  FattureDto(LocalDate data, BigDecimal importo, String numero, Long clienteId, StatoFattura stato) {
         this.data = data;
         this.importo = importo;
         this.numero = numero;

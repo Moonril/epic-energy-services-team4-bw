@@ -13,7 +13,7 @@ import java.util.List;
 
 @Data
     public class ClienteDTO {
-        private int id;
+
         @NotBlank(message = "La ragione sociale non può essere vuota")
         @Size(min = 3, max = 100, message = "La ragione sociale deve avere tra 3 e 100 caratteri")
         private String ragioneSociale;

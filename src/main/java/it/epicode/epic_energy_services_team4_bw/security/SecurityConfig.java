@@ -37,7 +37,7 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(http->http.requestMatchers("/auth/**").permitAll());
 //        httpSecurity.authorizeHttpRequests(http->http.requestMatchers(HttpMethod.GET,"/studenti/**").permitAll());
 
-        httpSecurity.authorizeHttpRequests(http->http.requestMatchers("/studenti/**").permitAll()); //
+        httpSecurity.authorizeHttpRequests(http->http.requestMatchers("/clienti/**").permitAll()); //
         httpSecurity.authorizeHttpRequests(http->http.requestMatchers(HttpMethod.POST).permitAll());
 
         httpSecurity.authorizeHttpRequests(http->http.anyRequest().denyAll());
