@@ -7,5 +7,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
 import java.util.Optional;
 
 public interface IndirizzoRepository extends JpaRepository <Indirizzo, Integer>, PagingAndSortingRepository <Indirizzo, Integer> {
-    Optional<Object> findById(Int id);
+    Optional<Indirizzo> findById(int id);
 }
