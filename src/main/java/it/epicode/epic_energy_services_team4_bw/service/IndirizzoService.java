@@ -58,10 +58,9 @@ public class IndirizzoService {
     //Metodo get indirizzo
 
     public Indirizzo getIndirizzo(int id) throws NotFoundException {
-        return indirizzoRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Indirizzo con id: " + id + " non trovato"));
-    }
+        return (Indirizzo) indirizzoRepository.findById(id).orElseThrow(() -> new NotFoundException("Indirizzo con id: " + id + " non trovato"));
 
+    }
     //Metodo update
     public Indirizzo updateIndirizzo(int id, IndirizzoDto indirizzoDto) throws NotFoundException {
         Indirizzo indirizzoDaAggiornare = getIndirizzo(id);
