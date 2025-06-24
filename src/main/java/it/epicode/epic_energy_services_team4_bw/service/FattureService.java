@@ -26,7 +26,6 @@ public class FattureService {
     @Autowired
     private ClienteRepository clienteRepository;
 
-
     /**
      * Recupera tutte le fatture paginate.
      * @param pageable Oggetto Pageable per paginazione e ordinamento.
@@ -86,9 +85,13 @@ public class FattureService {
         fattura.setImporto(fatturaDto.getImporto());
         fattura.setNumero(fatturaDto.getNumero());
         fattura.setStato(fatturaDto.getStato());
+
         if (fatturaDto.getClienteId() != null) {
-            if (fattura.getCliente() == null || !fatturaDto.getClienteId().equals(Long.valueOf(fattura.getCliente().getId()))) {
-                Cliente newCliente = clienteRepository.findById(fatturaDto.getClienteId().intValue()) // Converti Long a int per findById
+            // *** PUNTO DI CONVERSIONE ***
+            // Conversione da Long (dal DTO) a Integer (per il ClienteRepository/Cliente.id)
+            Integer clienteIdAsInteger = fatturaDto.getClienteId().intValue();
+            if (fattura.getCliente() == null || !clienteIdAsInteger.equals(fattura.getCliente().getId())) {
+                Cliente newCliente = clienteRepository.findById(clienteIdAsInteger)
                         .orElseThrow(() -> new NotFoundException("Cliente con id=" + fatturaDto.getClienteId() + " non trovato."));
                 fattura.setCliente(newCliente);
             }
@@ -160,6 +163,7 @@ public class FattureService {
      * @return Pagina di FattureDto.
      */
     public Page<FattureDto> findByClienteIdAndStato(Long clienteId, StatoFattura stato, Pageable pageable) {
+        // Qui clienteId è già Long, quindi lo passiamo direttamente
         return fattureRepository.findByClienteIdAndStato(clienteId, stato, pageable).map(this::convertToDTO);
     }
 
@@ -171,6 +175,7 @@ public class FattureService {
      * @return Pagina di FattureDto.
      */
     public Page<FattureDto> findByClienteIdAndData(Long clienteId, LocalDate data, Pageable pageable) {
+        // Qui clienteId è già Long, quindi lo passiamo direttamente
         return fattureRepository.findByClienteIdAndData(clienteId, data, pageable).map(this::convertToDTO);
     }
 
@@ -185,21 +190,19 @@ public class FattureService {
         return fattureRepository.findByStatoAndData(stato, data, pageable).map(this::convertToDTO);
     }
 
-
     /**
      * Converte un'entità Fatture in un DTO FattureDto.
-     * Gestisce la conversione dell'ID del cliente da int a Long.
      * @param fattura L'entità Fatture da convertire.
      * @return Il DTO FattureDto risultante.
      */
     private FattureDto convertToDTO(Fatture fattura) {
         FattureDto dto = new FattureDto();
-        dto.setId(fattura.getId());
         dto.setData(fattura.getData());
         dto.setImporto(fattura.getImporto());
         dto.setNumero(fattura.getNumero());
         dto.setStato(fattura.getStato());
         if (fattura.getCliente() != null) {
+            // L'ID del Cliente è Integer, ma il DTO della Fattura lo vuole Long
             dto.setClienteId(Long.valueOf(fattura.getCliente().getId()));
         } else {
             dto.setClienteId(null);
@@ -209,7 +212,6 @@ public class FattureService {
 
     /**
      * Converte un DTO FattureDto in un'entità Fatture.
-     * Gestisce la conversione dell'ID del cliente da Long a int per trovare il Cliente.
      * @param dto Il DTO FattureDto da convertire.
      * @return L'entità Fatture risultante.
      * @throws NotFoundException Se il cliente specificato nell'ID non viene trovato.
@@ -217,13 +219,14 @@ public class FattureService {
      */
     private Fatture convertToEntity(FattureDto dto) throws NotFoundException, BadRequestException {
         Fatture fattura = new Fatture();
-        Optional.ofNullable(dto.getId()).ifPresent(fattura::setId);
         fattura.setData(dto.getData());
         fattura.setImporto(dto.getImporto());
         fattura.setNumero(dto.getNumero());
         fattura.setStato(dto.getStato());
 
         if (dto.getClienteId() != null) {
+            // *** PUNTO DI CONVERSIONE ***
+            // Conversione da Long (dal DTO) a Integer (per il ClienteRepository/Cliente.id)
             Cliente cliente = clienteRepository.findById(dto.getClienteId().intValue())
                     .orElseThrow(() -> new NotFoundException("Cliente con id=" + dto.getClienteId() + " non trovato per la fattura."));
             fattura.setCliente(cliente);

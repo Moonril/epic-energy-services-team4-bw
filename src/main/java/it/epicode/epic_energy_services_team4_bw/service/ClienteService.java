@@ -13,6 +13,10 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
 @Service
 public class ClienteService {
 
@@ -74,5 +78,19 @@ public class ClienteService {
         clienteRepository.delete(cliente);
     }
 
+    public List<Cliente> filtraClienti(BigDecimal fatturatoMin, LocalDate dataInserimento,
+                                       LocalDate dataUltimoContatto, String parteNome){
+        if (fatturatoMin != null) {
+            return clienteRepository.findByFatturatoAnnualeGreaterThanEqual(fatturatoMin);
+        } else if (dataInserimento != null) {
+            return clienteRepository.findByDataInserimentoAfter(dataInserimento);
+        } else if (dataUltimoContatto != null) {
+            return clienteRepository.findByDataUltimoContattoAfter(dataUltimoContatto);
+        } else if (parteNome != null && !parteNome.isEmpty()) {
+            return clienteRepository.findByRagioneSocialeContainingIgnoreCase(parteNome);
+        } else {
+            return clienteRepository.findAll();
+        }
+    }
+    }
 
-}
