@@ -1,5 +1,6 @@
 package it.epicode.epic_energy_services_team4_bw.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.epicode.epic_energy_services_team4_bw.enums.TipoCliente;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -39,8 +40,10 @@ public class Cliente {
     private String logoAziendale;
     @Enumerated(EnumType.STRING)
     private TipoCliente tipoCliente;
+    @JsonIgnore
     @OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL)
     private List<Indirizzo> indirizzi=new ArrayList<>();
+    @JsonIgnore
     @OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL)
     private List<Fatture> fatture=new ArrayList<>();
 
