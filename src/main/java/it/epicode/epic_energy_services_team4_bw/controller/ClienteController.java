@@ -13,7 +13,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -30,6 +32,26 @@ public class ClienteController {
                                        @RequestParam(defaultValue = "10") int size,
                                        @RequestParam(defaultValue = "id") String sortBy) {
         return clienteService.findAllClienti(page, size, sortBy);
+    }
+
+    //ordinamenti
+    @GetMapping("/ordinati")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Page<Cliente> getClientiOrdinati(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "ragioneSociale") String sortBy
+    ) {
+        return clienteService.getClientiOrdinati(page, size, sortBy);
+    }
+
+    @GetMapping("/ordinati-provincia")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Page<Cliente> getClientiOrdinatiPerProvincia(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return clienteService.getClientiOrdinatiPerProvincia(page, size);
     }
 
     @GetMapping("/filtro")
@@ -75,5 +97,10 @@ public class ClienteController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteCliente(@PathVariable int id) throws NotFoundException {
         clienteService.deleteCliente(id);
+    }
+    @PatchMapping("/{id}/logo")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String patchLogo(@PathVariable int id, @RequestParam MultipartFile file) throws NotFoundException, IOException {
+        return clienteService.patchLogoCliente(id, file);
     }
 }
