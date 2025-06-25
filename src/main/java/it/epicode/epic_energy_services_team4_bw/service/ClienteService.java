@@ -6,8 +6,7 @@ import it.epicode.epic_energy_services_team4_bw.exception.BadRequestException;
 import it.epicode.epic_energy_services_team4_bw.exception.NotFoundException;
 import it.epicode.epic_energy_services_team4_bw.model.Cliente;
 import it.epicode.epic_energy_services_team4_bw.model.Indirizzo;
-import it.epicode.epic_energy_services_team4_bw.model.Comune;
-import it.epicode.epic_energy_services_team4_bw.model.Indirizzo;
+
 import it.epicode.epic_energy_services_team4_bw.repository.ClienteRepository;
 import it.epicode.epic_energy_services_team4_bw.repository.IndirizzoRepository;
 import it.epicode.epic_energy_services_team4_bw.repository.ComuneRepository;
