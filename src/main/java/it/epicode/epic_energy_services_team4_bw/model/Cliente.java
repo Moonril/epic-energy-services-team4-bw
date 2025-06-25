@@ -41,10 +41,11 @@ public class Cliente {
     @Enumerated(EnumType.STRING)
     private TipoCliente tipoCliente;
 
-    @JsonIgnore
+
     @OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL)
     private List<Indirizzo> indirizzi=new ArrayList<>();
-    @JsonIgnore
+
+    @JsonIgnore //da verificare
     @OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL)
     private List<Fatture> fatture=new ArrayList<>();
 
