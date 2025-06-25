@@ -42,7 +42,8 @@ import java.util.List;
         @NotNull(message = "Il tipo cliente non può essere nullo")
         private TipoCliente tipoCliente;
         private String logoAziendaleUrl;
-        private List<IndirizzoDto> indirizzi;
+        private List<Integer> indirizziId;
+    private List<IndirizzoDto> indirizzi;
         private List<FattureDto> fatture;
     }
 

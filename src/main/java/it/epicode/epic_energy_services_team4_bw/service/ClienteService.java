@@ -1,10 +1,13 @@
 package it.epicode.epic_energy_services_team4_bw.service;
 import com.cloudinary.Cloudinary;
 import it.epicode.epic_energy_services_team4_bw.dto.ClienteDTO;
+import it.epicode.epic_energy_services_team4_bw.dto.IndirizzoDto;
 import it.epicode.epic_energy_services_team4_bw.exception.BadRequestException;
 import it.epicode.epic_energy_services_team4_bw.exception.NotFoundException;
 import it.epicode.epic_energy_services_team4_bw.model.Cliente;
+import it.epicode.epic_energy_services_team4_bw.model.Indirizzo;
 import it.epicode.epic_energy_services_team4_bw.repository.ClienteRepository;
+import it.epicode.epic_energy_services_team4_bw.repository.IndirizzoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +22,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -29,6 +33,8 @@ public class ClienteService {
     private ClienteRepository clienteRepository;
     @Autowired
     private Cloudinary cloudinary;
+    @Autowired
+    IndirizzoRepository indirizzoRepository;
 
 
     @Transactional(readOnly = true)
@@ -43,10 +49,12 @@ public class ClienteService {
         return clienteRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Cliente con id=" + id + " non trovato."));
     }
-    public Cliente saveCliente(ClienteDTO clienteDTO) {
-        clienteRepository.findByPartitaIva(clienteDTO.getPartitaIva()).ifPresent(cliente -> {
+    @Transactional
+    public Cliente saveCliente(ClienteDTO clienteDTO) throws NotFoundException {
+        clienteRepository.findByPartitaIva(clienteDTO.getPartitaIva()).ifPresent(c -> {
             throw new BadRequestException("Partita IVA " + clienteDTO.getPartitaIva() + " già esistente.");
         });
+
         Cliente cliente = new Cliente();
         cliente.setRagioneSociale(clienteDTO.getRagioneSociale());
         cliente.setPartitaIva(clienteDTO.getPartitaIva());
@@ -59,12 +67,32 @@ public class ClienteService {
         cliente.setNomeContatto(clienteDTO.getNomeContatto());
         cliente.setCognomeContatto(clienteDTO.getCognomeContatto());
         cliente.setTipoCliente(clienteDTO.getTipoCliente());
+        cliente.setIndirizzi(new ArrayList<>());
 
-        return clienteRepository.save(cliente);
+        Cliente savedCliente = clienteRepository.save(cliente);
+
+        if (clienteDTO.getIndirizziId() != null && !clienteDTO.getIndirizziId().isEmpty()) {
+            List<Indirizzo> indirizziDaAssociare = indirizzoRepository.findAllById(clienteDTO.getIndirizziId());
+            if (indirizziDaAssociare.size() != clienteDTO.getIndirizziId().size()) {
+                throw new NotFoundException("Uno o più ID di indirizzi forniti non sono stati trovati.");
+            }
+            for (Indirizzo indirizzo : indirizziDaAssociare) {
+                if (indirizzo.getCliente() != null) {
+                    throw new BadRequestException("L'indirizzo con id=" + indirizzo.getId() + " è già associato ad un altro cliente.");
+                }
+                indirizzo.setCliente(savedCliente);
+                savedCliente.getIndirizzi().add(indirizzo);
+            }
+            indirizzoRepository.saveAll(indirizziDaAssociare);
+        }
+        return savedCliente;
     }
 
-    public Cliente update(int id, ClienteDTO clienteDTO) throws NotFoundException {
-        Cliente cliente = findClienteById(id);
+
+
+    public Cliente updateCliente(int id, ClienteDTO clienteDTO) throws NotFoundException {
+        Cliente cliente = clienteRepository.findById(id)
+                .orElseThrow(() -> new NotFoundException("Cliente con id=" + id + " non trovato."));
         cliente.setRagioneSociale(clienteDTO.getRagioneSociale());
         cliente.setPartitaIva(clienteDTO.getPartitaIva());
         cliente.setEmail(clienteDTO.getEmail());
@@ -76,9 +104,9 @@ public class ClienteService {
         cliente.setNomeContatto(clienteDTO.getNomeContatto());
         cliente.setCognomeContatto(clienteDTO.getCognomeContatto());
         cliente.setTipoCliente(clienteDTO.getTipoCliente());
-
         return clienteRepository.save(cliente);
     }
+
     public void deleteCliente(int id) throws NotFoundException {
         Cliente cliente = clienteRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Cliente con id=" + id + " non trovato."));

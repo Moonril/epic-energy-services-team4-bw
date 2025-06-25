@@ -74,7 +74,7 @@ public class ClienteController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Cliente saveCliente(@RequestBody @Validated ClienteDTO clienteDTO, BindingResult bindingResult) throws ValidationException {
+    public Cliente saveCliente(@RequestBody @Validated ClienteDTO clienteDTO, BindingResult bindingResult) throws ValidationException, NotFoundException {
         if(bindingResult.hasErrors()){
             throw new ValidationException(bindingResult.getAllErrors().stream()
                     .map(objectError -> objectError.getDefaultMessage()).reduce("",(e,s)->e+s));
@@ -89,7 +89,7 @@ public class ClienteController {
             throw new ValidationException(bindingResult.getAllErrors().stream()
                     .map(objectError -> objectError.getDefaultMessage()).reduce("",(e,s)->e+s));
         }
-        return clienteService.update(id, clienteDTO);
+        return clienteService.updateCliente(id, clienteDTO);
     }
 
     @DeleteMapping("/{id}")
