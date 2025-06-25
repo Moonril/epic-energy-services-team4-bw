@@ -12,10 +12,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.Collections;
 import java.util.List;
 
@@ -94,8 +97,6 @@ public class ClienteService {
             return clienteRepository.findAll();
         }
     }
-
-
     public String patchLogoCliente(int id, MultipartFile file) throws NotFoundException, IOException {
         Cliente clienteDaPatchare = findClienteById(id);
 //qui non mi legge cloudinary
@@ -108,5 +109,14 @@ public class ClienteService {
 
         return url;
     }
-}
+    public Page<Cliente> getClientiOrdinati(int page, int size, String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return clienteRepository.findAll(pageable);
+    }
+
+    public Page<Cliente> getClientiOrdinatiPerProvincia(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("sedeLegale.comune.provincia.ragioneSociale"));
+        return clienteRepository.findAll(pageable);
+    }
+    }
 

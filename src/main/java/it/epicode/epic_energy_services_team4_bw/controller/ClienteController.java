@@ -33,6 +33,26 @@ public class ClienteController {
         return clienteService.findAllClienti(page, size, sortBy);
     }
 
+    //ordinamenti
+    @GetMapping("/ordinati")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Page<Cliente> getClientiOrdinati(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "ragioneSociale") String sortBy
+    ) {
+        return clienteService.getClientiOrdinati(page, size, sortBy);
+    }
+
+    @GetMapping("/ordinati-provincia")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Page<Cliente> getClientiOrdinatiPerProvincia(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        return clienteService.getClientiOrdinatiPerProvincia(page, size);
+    }
+
     @GetMapping("/filtro")
     @PreAuthorize("hasAuthority('ADMIN')")
     public List<Cliente> filtraClienti(
