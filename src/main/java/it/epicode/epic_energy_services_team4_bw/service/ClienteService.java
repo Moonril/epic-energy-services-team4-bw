@@ -1,5 +1,4 @@
 package it.epicode.epic_energy_services_team4_bw.service;
-
 import it.epicode.epic_energy_services_team4_bw.dto.ClienteDTO;
 import it.epicode.epic_energy_services_team4_bw.exception.BadRequestException;
 import it.epicode.epic_energy_services_team4_bw.exception.NotFoundException;
@@ -12,9 +11,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -92,5 +94,19 @@ public class ClienteService {
             return clienteRepository.findAll();
         }
     }
+
+
+    public String patchLogoCliente(int id, MultipartFile file) throws NotFoundException, IOException {
+        Cliente clienteDaPatchare = findClienteById(id);
+//qui non mi legge cloudinary
+        String url = (String)cloudinary.uploader().upload(file.getBytes(),
+                Collections.emptyMap()).get("url");
+
+        clienteDaPatchare.setLogoAziendale(url);
+
+        clienteRepository.save(clienteDaPatchare);
+
+        return url;
     }
+}
 

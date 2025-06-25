@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
@@ -75,5 +76,10 @@ public class ClienteController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteCliente(@PathVariable int id) throws NotFoundException {
         clienteService.deleteCliente(id);
+    }
+    @PatchMapping("/{id}/logo")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String patchLogo(@PathVariable int id, @RequestParam("logoFile") MultipartFile file) throws NotFoundException, IOException {
+        return clienteService.patchLogoCliente(id, file);
     }
 }
