@@ -78,37 +78,37 @@ public class ComuneService {
 
             String[] righe = contenuto.split("\n");
 
-            for (int i = 1; i < righe.length; i++) {
+            int numeroComuniImportati = 0;
+            int righeSaltate = 0;
+
+            for (int i = 999; i < 2000; i++) { //righe.length
                 String riga = righe[i].trim();
 
                 if (riga.isEmpty()) continue;
 
                 String[] colonne = riga.split(";");
 
-                if (colonne.length < 2) continue;
+                if (colonne.length < 4) continue; // servono almeno 4 colonne
 
-                String nomeComune = colonne[0].trim();
-                String siglaProvincia = colonne[1].trim();
+                String nomeComune = colonne[2].trim();       // 3ª colonna: Denominazione in italiano
+                String nomeProvincia = colonne[3].trim();    // 4ª colonna: Nome Provincia
 
-                try {
-                    int provinciaId = Integer.parseInt(siglaProvincia);
-
-                    Provincia provincia = provinciaRepository.findById(provinciaId).orElse(null);
-                    if (provincia == null) {
-                        System.out.println("Provincia con ID " + provinciaId + " non trovata. Riga: " + riga);
-                        continue;
-                    }
-
-                    Comune comune = new Comune();
-                    comune.setNome(nomeComune);
-                    comune.setProvincia(provincia);
-
-                    comuneRepository.save(comune);
-
-                } catch (NumberFormatException e) {
-                    System.out.println("ID provincia non valido: " + siglaProvincia + " nella riga: " + riga);
+                Provincia provincia = provinciaRepository.findByNomeIgnoreCase(nomeProvincia).orElse(null);
+                if (provincia == null) {
+                    righeSaltate++;
+                    System.out.println("Provincia '" + nomeProvincia + "' non trovata. Riga: " + riga);
                     continue;
                 }
+
+                Comune comune = new Comune();
+                comune.setNome(nomeComune);
+                comune.setProvincia(provincia);
+
+                comuneRepository.save(comune);
+                numeroComuniImportati++;
+                System.out.println("Comuni importati: " + numeroComuniImportati);
+                System.out.println("Righe saltate (province non trovate o malformate): " + righeSaltate);
+
             }
 
         } catch (Exception e) {
