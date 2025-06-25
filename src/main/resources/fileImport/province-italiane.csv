@@ -15,7 +15,7 @@ BN;Benevento;Campania
 BG;Bergamo;Lombardia
 BI;Biella;Piemonte
 BO;Bologna;Emilia Romagna
-BZ;Bolzano;Trentino Alto Adige
+BZ;Bolzano/Bozen;Trentino Alto Adige
 BS;Brescia;Lombardia
 BR;Brindisi;Puglia
 CA;Cagliari;Sardegna
@@ -80,7 +80,7 @@ PZ;Potenza;Basilicata
 PO;Prato;Toscana
 RG;Ragusa;Sicilia
 RA;Ravenna;Emilia Romagna
-RC;Reggio-Calabria;Calabria
+RC;Reggio Calabria;Calabria
 RE;Reggio-Emilia;Emilia Romagna
 RI;Rieti;Lazio
 RN;Rimini;Emilia Romagna
@@ -104,7 +104,7 @@ TS;Trieste;Friuli Venezia Giulia
 UD;Udine;Friuli Venezia Giulia
 VA;Varese;Lombardia
 VE;Venezia;Veneto
-VB;Verbano Cusio Ossola;Piemonte
+VB;Verbano-Cusio-Ossola;Piemonte
 VC;Vercelli;Piemonte
 VR;Verona;Veneto
 VV;Vibo-Valentia;Calabria

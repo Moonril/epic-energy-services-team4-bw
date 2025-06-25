@@ -81,7 +81,7 @@ public class ComuneService {
             int numeroComuniImportati = 0;
             int righeSaltate = 0;
 
-            for (int i = 999; i < 2000; i++) { //righe.length
+            for (int i = 1999; i < 3000; i++) { //righe.length
                 String riga = righe[i].trim();
 
                 if (riga.isEmpty()) continue;
