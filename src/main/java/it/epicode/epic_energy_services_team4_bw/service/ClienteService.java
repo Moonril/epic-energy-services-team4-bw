@@ -92,5 +92,16 @@ public class ClienteService {
             return clienteRepository.findAll();
         }
     }
+
+    //ordina cliente
+    public Page<Cliente> getClientiOrdinati(int page, int size, String sortBy) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return clienteRepository.findAll(pageable);
+    }
+
+    public Page<Cliente> getClientiOrdinatiPerProvincia(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("sedeLegale.comune.provincia.ragioneSociale"));
+        return clienteRepository.findAll(pageable);
+    }
     }
 
