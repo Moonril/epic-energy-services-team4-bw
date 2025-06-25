@@ -1,4 +1,5 @@
 package it.epicode.epic_energy_services_team4_bw.service;
+import com.cloudinary.Cloudinary;
 import it.epicode.epic_energy_services_team4_bw.dto.ClienteDTO;
 import it.epicode.epic_energy_services_team4_bw.exception.BadRequestException;
 import it.epicode.epic_energy_services_team4_bw.exception.NotFoundException;
@@ -26,6 +27,8 @@ public class ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+    @Autowired
+    private Cloudinary cloudinary;
 
 
     @Transactional(readOnly = true)
