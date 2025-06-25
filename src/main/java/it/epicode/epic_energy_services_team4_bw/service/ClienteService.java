@@ -14,6 +14,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -38,6 +40,9 @@ public class ClienteService {
 
     @Autowired
     private Cloudinary cloudinary;
+
+    @Autowired
+    private JavaMailSenderImpl javaMailSender;
 
 
     @Transactional(readOnly = true)
@@ -88,6 +93,8 @@ public class ClienteService {
         }
 
         cliente.setIndirizzi(indirizzi);
+
+        sendMail("girzzo@gmail.com", cliente);
 
         return clienteRepository.save(cliente);
     }
@@ -148,6 +155,16 @@ public class ClienteService {
     public Page<Cliente> getClientiOrdinatiPerProvincia(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return clienteRepository.findAllOrderByProvincia(pageable);
+    }
+
+
+    private void sendMail(String email, Cliente cliente) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("Registrazione Dipendente");
+        message.setText("Benvenut* " + cliente.getNomeContatto() +", la tua registrazione è avvenuta con successo!");
+
+        javaMailSender.send(message);
     }
     }
 
