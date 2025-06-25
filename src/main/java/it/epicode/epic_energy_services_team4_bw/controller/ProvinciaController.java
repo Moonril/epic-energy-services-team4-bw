@@ -14,7 +14,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(path = "/provincia")
+@RequestMapping(path = "/province")
 public class ProvinciaController {
 
     @Autowired
@@ -60,5 +60,13 @@ public class ProvinciaController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public void deleteProvincia(@PathVariable int id) throws NotFoundException {
         provinciaService.deleteProvincia(id);
+    }
+
+
+    @PostMapping("/import")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public String importaProvince() {
+        provinciaService.importaProvince();
+        return "Province importate!";
     }
 }
