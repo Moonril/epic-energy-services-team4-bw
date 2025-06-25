@@ -1,5 +1,6 @@
 package it.epicode.epic_energy_services_team4_bw.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -13,10 +14,12 @@ public class Indirizzo {
     private String civico;
     private String localita;
     private String cap;
+
     @ManyToOne
     @JoinColumn(name = "comune_id")
     private Comune comune;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;

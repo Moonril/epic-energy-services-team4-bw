@@ -1,10 +1,14 @@
 package it.epicode.epic_energy_services_team4_bw.service;
 import com.cloudinary.Cloudinary;
 import it.epicode.epic_energy_services_team4_bw.dto.ClienteDTO;
+import it.epicode.epic_energy_services_team4_bw.dto.IndirizzoDto;
 import it.epicode.epic_energy_services_team4_bw.exception.BadRequestException;
 import it.epicode.epic_energy_services_team4_bw.exception.NotFoundException;
 import it.epicode.epic_energy_services_team4_bw.model.Cliente;
+import it.epicode.epic_energy_services_team4_bw.model.Comune;
+import it.epicode.epic_energy_services_team4_bw.model.Indirizzo;
 import it.epicode.epic_energy_services_team4_bw.repository.ClienteRepository;
+import it.epicode.epic_energy_services_team4_bw.repository.ComuneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +23,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -27,6 +32,10 @@ public class ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    ComuneRepository comuneRepository;
+
     @Autowired
     private Cloudinary cloudinary;
 
@@ -43,7 +52,7 @@ public class ClienteService {
         return clienteRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Cliente con id=" + id + " non trovato."));
     }
-    public Cliente saveCliente(ClienteDTO clienteDTO) {
+    public Cliente saveCliente(ClienteDTO clienteDTO) throws NotFoundException {
         clienteRepository.findByPartitaIva(clienteDTO.getPartitaIva()).ifPresent(cliente -> {
             throw new BadRequestException("Partita IVA " + clienteDTO.getPartitaIva() + " già esistente.");
         });
@@ -59,6 +68,26 @@ public class ClienteService {
         cliente.setNomeContatto(clienteDTO.getNomeContatto());
         cliente.setCognomeContatto(clienteDTO.getCognomeContatto());
         cliente.setTipoCliente(clienteDTO.getTipoCliente());
+
+        List<Indirizzo> indirizzi = new ArrayList<>();
+        if (clienteDTO.getIndirizzi() != null) {
+            for (IndirizzoDto iDto : clienteDTO.getIndirizzi()) {
+                Indirizzo indirizzo = new Indirizzo();
+                indirizzo.setVia(iDto.getVia());
+                indirizzo.setCivico(iDto.getCivico());
+                indirizzo.setLocalita(iDto.getLocalita());
+                indirizzo.setCap(iDto.getCap());
+
+                Comune comune = comuneRepository.findById(iDto.getComuneId())
+                        .orElseThrow(() -> new NotFoundException("Comune con id " + iDto.getComuneId() + " non trovato"));
+                indirizzo.setComune(comune);
+
+                indirizzo.setCliente(cliente);
+                indirizzi.add(indirizzo);
+            }
+        }
+
+        cliente.setIndirizzi(indirizzi);
 
         return clienteRepository.save(cliente);
     }

@@ -40,6 +40,7 @@ public class Cliente {
     private String logoAziendale;
     @Enumerated(EnumType.STRING)
     private TipoCliente tipoCliente;
+
     @JsonIgnore
     @OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL)
     private List<Indirizzo> indirizzi=new ArrayList<>();
