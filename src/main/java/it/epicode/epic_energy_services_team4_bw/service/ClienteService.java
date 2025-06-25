@@ -117,8 +117,8 @@ public class ClienteService {
     }
 
     public Page<Cliente> getClientiOrdinatiPerProvincia(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by("sedeLegale.comune.provincia.ragioneSociale"));
-        return clienteRepository.findAll(pageable);
+        Pageable pageable = PageRequest.of(page, size);
+        return clienteRepository.findAllOrderByProvincia(pageable);
     }
     }
 
