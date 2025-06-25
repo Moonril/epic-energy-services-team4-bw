@@ -6,13 +6,18 @@ import it.epicode.epic_energy_services_team4_bw.exception.BadRequestException;
 import it.epicode.epic_energy_services_team4_bw.exception.NotFoundException;
 import it.epicode.epic_energy_services_team4_bw.model.Cliente;
 import it.epicode.epic_energy_services_team4_bw.model.Indirizzo;
+import it.epicode.epic_energy_services_team4_bw.model.Comune;
+import it.epicode.epic_energy_services_team4_bw.model.Indirizzo;
 import it.epicode.epic_energy_services_team4_bw.repository.ClienteRepository;
 import it.epicode.epic_energy_services_team4_bw.repository.IndirizzoRepository;
+import it.epicode.epic_energy_services_team4_bw.repository.ComuneRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,10 +36,17 @@ public class ClienteService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    ComuneRepository comuneRepository;
+
     @Autowired
     private Cloudinary cloudinary;
     @Autowired
     IndirizzoRepository indirizzoRepository;
+
+    @Autowired
+    private JavaMailSenderImpl javaMailSender;
 
 
     @Transactional(readOnly = true)
@@ -49,12 +61,10 @@ public class ClienteService {
         return clienteRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Cliente con id=" + id + " non trovato."));
     }
-    @Transactional
     public Cliente saveCliente(ClienteDTO clienteDTO) throws NotFoundException {
-        clienteRepository.findByPartitaIva(clienteDTO.getPartitaIva()).ifPresent(c -> {
+        clienteRepository.findByPartitaIva(clienteDTO.getPartitaIva()).ifPresent(cliente -> {
             throw new BadRequestException("Partita IVA " + clienteDTO.getPartitaIva() + " già esistente.");
         });
-
         Cliente cliente = new Cliente();
         cliente.setRagioneSociale(clienteDTO.getRagioneSociale());
         cliente.setPartitaIva(clienteDTO.getPartitaIva());
@@ -85,7 +95,10 @@ public class ClienteService {
             }
             indirizzoRepository.saveAll(indirizziDaAssociare);
         }
-        return savedCliente;
+
+        sendMail("girzzo@gmail.com", cliente);
+
+        return clienteRepository.save(cliente);
     }
 
 
@@ -104,6 +117,7 @@ public class ClienteService {
         cliente.setNomeContatto(clienteDTO.getNomeContatto());
         cliente.setCognomeContatto(clienteDTO.getCognomeContatto());
         cliente.setTipoCliente(clienteDTO.getTipoCliente());
+
         return clienteRepository.save(cliente);
     }
 
@@ -147,6 +161,16 @@ public class ClienteService {
     public Page<Cliente> getClientiOrdinatiPerProvincia(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return clienteRepository.findAllOrderByProvincia(pageable);
+    }
+
+
+    private void sendMail(String email, Cliente cliente) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(email);
+        message.setSubject("Registrazione Dipendente");
+        message.setText("Benvenut* " + cliente.getNomeContatto() +", la tua registrazione è avvenuta con successo!");
+
+        javaMailSender.send(message);
     }
     }
 
