@@ -40,6 +40,8 @@ public class SecurityConfig {
         httpSecurity.authorizeHttpRequests(http->http.requestMatchers("/auth/**").permitAll());
 //        httpSecurity.authorizeHttpRequests(http->http.requestMatchers(HttpMethod.GET,"/studenti/**").permitAll());
 
+        httpSecurity.authorizeHttpRequests(http->http.requestMatchers("/html/**").permitAll());
+
         httpSecurity.authorizeHttpRequests(http->http.requestMatchers("/clienti/**").permitAll());
         httpSecurity.authorizeHttpRequests(http->http.requestMatchers("/comuni/**").permitAll());
         httpSecurity.authorizeHttpRequests(http->http.requestMatchers("/province/**").permitAll());
