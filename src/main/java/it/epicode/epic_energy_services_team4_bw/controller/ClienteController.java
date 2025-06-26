@@ -45,13 +45,13 @@ public class ClienteController {
         return clienteService.getClientiOrdinati(page, size, sortBy);
     }
 
-    @GetMapping("/ordinati-provincia")
+    @GetMapping("/ordinati-provincia-sede-legale")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Page<Cliente> getClientiOrdinatiPerProvincia(
+    public Page<Cliente> getClientiOrdinatiPerProvinciaSedeLegale(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
-        return clienteService.getClientiOrdinatiPerProvincia(page, size);
+        return clienteService.getClientiOrdinatiPerProvinciaSedeLegale(page, size);
     }
 
     @GetMapping("/filtro")
@@ -89,7 +89,7 @@ public class ClienteController {
             throw new ValidationException(bindingResult.getAllErrors().stream()
                     .map(objectError -> objectError.getDefaultMessage()).reduce("",(e,s)->e+s));
         }
-        return clienteService.update(id, clienteDTO);
+        return clienteService.updateCliente(id, clienteDTO);
     }
 
     @DeleteMapping("/{id}")

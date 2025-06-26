@@ -34,7 +34,9 @@ public class SecurityConfig {
         httpSecurity.cors(Customizer.withDefaults());
 
         // sblocca login.html
-        httpSecurity.authorizeHttpRequests(http -> http.requestMatchers("/login.html").permitAll());
+        httpSecurity.authorizeHttpRequests(http -> http
+                .requestMatchers("/login.html", "/register.html", "/css/**", "/js/**", "/images/**", "/favicon.ico").permitAll());
+
 
         // prevede la approvazione o negazione di un servizio endpoint
         httpSecurity.authorizeHttpRequests(http->http.requestMatchers("/auth/**").permitAll());
