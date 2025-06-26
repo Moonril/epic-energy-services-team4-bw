@@ -13,7 +13,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 @Repository
-public interface FattureRepository extends JpaRepository<Fatture, Long> {
+public interface FattureRepository extends JpaRepository<Fatture, Integer> {
     Optional<Fatture> findByNumero(String numero);
 
     Page<Fatture> findByStato(StatoFattura stato, Pageable pageable);
@@ -23,19 +23,17 @@ public interface FattureRepository extends JpaRepository<Fatture, Long> {
     @Query("SELECT f FROM Fatture f WHERE FUNCTION('YEAR', f.data) = :anno")
     Page<Fatture> findByAnno(@Param("anno") int anno, Pageable pageable);
 
-
     Page<Fatture> findByImportoBetween(BigDecimal importoMin, BigDecimal importoMax, Pageable pageable);
 
 
-    Page<Fatture> findByClienteIdAndStato(Long clienteId, StatoFattura stato, Pageable pageable);
+    Page<Fatture> findByClienteIdAndStato(int clienteId, StatoFattura stato, Pageable pageable);
 
 
-    Page<Fatture> findByClienteIdAndData(Long clienteId, LocalDate data, Pageable pageable);
-
+    Page<Fatture> findByClienteIdAndData(int clienteId, LocalDate data, Pageable pageable);
 
     Page<Fatture> findByStatoAndData(StatoFattura stato, LocalDate data, Pageable pageable);
 
 
     @Query("SELECT COUNT(f) > 0 FROM Fatture f WHERE f.numero = :numero AND (:id IS NULL OR f.id <> :id)")
-    boolean existsByNumeroAndIdNot(@Param("numero") String numero, @Param("id") Long id);
+    boolean existsByNumeroAndIdNot(@Param("numero") String numero, @Param("id") Integer id);
 }

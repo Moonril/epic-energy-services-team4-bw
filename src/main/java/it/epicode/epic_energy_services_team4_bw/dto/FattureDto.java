@@ -26,20 +26,9 @@ public class FattureDto {
     private String numero;
 
     @NotNull(message = "L'ID del cliente non può essere nullo")
-    private Long clienteId;
+    private int clienteId;
 
     @NotNull(message = "Lo stato fattura non può essere nullo")
     private StatoFattura stato;
 
-
-    public  FattureDto() {
-    }
-
-    public  FattureDto(LocalDate data, BigDecimal importo, String numero, Long clienteId, StatoFattura stato) {
-        this.data = data;
-        this.importo = importo;
-        this.numero = numero;
-        this.clienteId = clienteId;
-        this.stato = stato;
-    }
 }

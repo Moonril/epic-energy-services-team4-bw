@@ -26,214 +26,56 @@ public class FattureService {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    /**
-     * Recupera tutte le fatture paginate.
-     * @param pageable Oggetto Pageable per paginazione e ordinamento.
-     * @return Pagina di FattureDto.
-     */
-    public Page<FattureDto> findAll(Pageable pageable) {
-        Page<Fatture> fatturePage = fattureRepository.findAll(pageable);
-        return fatturePage.map(this::convertToDTO);
-    }
+    @Autowired
+    private ClienteService clienteService;
 
-    /**
-     * Recupera una fattura tramite ID.
-     * @param id ID della fattura.
-     * @return FattureDto corrispondente.
-     * @throws NotFoundException Se la fattura non viene trovata.
-     */
-    public FattureDto findById(Long id) throws NotFoundException {
-        Fatture fattura = fattureRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Fattura con id=" + id + " non trovata."));
-        return convertToDTO(fattura);
-    }
-
-    /**
-     * Salva una nuova fattura.
-     * @param fatturaDto DTO della fattura da salvare.
-     * @return FattureDto della fattura salvata.
-     * @throws BadRequestException Se il numero fattura è già esistente.
-     * @throws NotFoundException Se il cliente specificato non viene trovato.
-     */
-    public FattureDto save(FattureDto fatturaDto) throws NotFoundException, BadRequestException {
-        if (fattureRepository.existsByNumeroAndIdNot(fatturaDto.getNumero(), null)) {
-            throw new BadRequestException("Numero fattura '" + fatturaDto.getNumero() + "' già esistente.");
+    public Fatture saveFattura(FattureDto fattureDto) throws NotFoundException {
+        if (fattureRepository.existsByNumeroAndIdNot(fattureDto.getNumero(), null)) {
+            throw new BadRequestException("Numero fattura '" + fattureDto.getNumero() + "' già esistente.");
         }
+        Cliente cliente = clienteService.findClienteById(fattureDto.getClienteId());
 
-        Fatture fattura = convertToEntity(fatturaDto);
-        Fatture savedFattura = fattureRepository.save(fattura);
-        return convertToDTO(savedFattura);
-    }
-
-    /**
-     * Aggiorna una fattura esistente.
-     * @param id ID della fattura da aggiornare.
-     * @param fatturaDto DTO con i dati aggiornati.
-     * @return FattureDto della fattura aggiornata.
-     * @throws NotFoundException Se la fattura o il cliente non vengono trovati.
-     * @throws BadRequestException Se il numero fattura aggiornato è già esistente e appartiene a un'altra fattura.
-     */
-    public FattureDto update(Long id, FattureDto fatturaDto) throws NotFoundException, BadRequestException {
-        Fatture fattura = fattureRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Fattura con id=" + id + " non trovata."));
-
-        if (fattureRepository.existsByNumeroAndIdNot(fatturaDto.getNumero(), id)) {
-            throw new BadRequestException("Numero fattura '" + fatturaDto.getNumero() + "' già esistente per un'altra fattura.");
-        }
-
-        fattura.setData(fatturaDto.getData());
-        fattura.setImporto(fatturaDto.getImporto());
-        fattura.setNumero(fatturaDto.getNumero());
-        fattura.setStato(fatturaDto.getStato());
-
-        if (fatturaDto.getClienteId() != null) {
-            // *** PUNTO DI CONVERSIONE ***
-            // Conversione da Long (dal DTO) a Integer (per il ClienteRepository/Cliente.id)
-            Integer clienteIdAsInteger = fatturaDto.getClienteId().intValue();
-            if (fattura.getCliente() == null || !clienteIdAsInteger.equals(fattura.getCliente().getId())) {
-                Cliente newCliente = clienteRepository.findById(clienteIdAsInteger)
-                        .orElseThrow(() -> new NotFoundException("Cliente con id=" + fatturaDto.getClienteId() + " non trovato."));
-                fattura.setCliente(newCliente);
-            }
-        } else {
-            throw new BadRequestException("L'ID del cliente non può essere nullo per l'aggiornamento della fattura.");
-        }
-
-        Fatture updatedFattura = fattureRepository.save(fattura);
-        return convertToDTO(updatedFattura);
-    }
-
-    /**
-     * Elimina una fattura tramite ID.
-     * @param id ID della fattura da eliminare.
-     * @throws NotFoundException Se la fattura non viene trovata.
-     */
-    public void delete(Long id) throws NotFoundException {
-        Fatture fattura = fattureRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException("Fattura con id=" + id + " non trovata."));
-        fattureRepository.delete(fattura);
-    }
-
-    /**
-     * Recupera le fatture filtrate per stato.
-     * @param stato Stato della fattura.
-     * @param pageable Oggetto Pageable.
-     * @return Pagina di FattureDto.
-     */
-    public Page<FattureDto> findByStato(StatoFattura stato, Pageable pageable) {
-        return fattureRepository.findByStato(stato, pageable).map(this::convertToDTO);
-    }
-
-    /**
-     * Recupera le fatture filtrate per data.
-     * @param data Data della fattura.
-     * @param pageable Oggetto Pageable.
-     * @return Pagina di FattureDto.
-     */
-    public Page<FattureDto> findByData(LocalDate data, Pageable pageable) {
-        return fattureRepository.findByData(data, pageable).map(this::convertToDTO);
-    }
-
-    /**
-     * Recupera le fatture filtrate per anno.
-     * @param anno Anno della fattura.
-     * @param pageable Oggetto Pageable.
-     * @return Pagina di FattureDto.
-     */
-    public Page<FattureDto> findByAnno(int anno, Pageable pageable) {
-        return fattureRepository.findByAnno(anno, pageable).map(this::convertToDTO);
-    }
-
-    /**
-     * Recupera le fatture filtrate per intervallo di importo.
-     * @param importoMin Importo minimo.
-     * @param importoMax Importo massimo.
-     * @param pageable Oggetto Pageable.
-     * @return Pagina di FattureDto.
-     */
-    public Page<FattureDto> findByImportoBetween(BigDecimal importoMin, BigDecimal importoMax, Pageable pageable) {
-        return fattureRepository.findByImportoBetween(importoMin, importoMax, pageable).map(this::convertToDTO);
-    }
-
-    /**
-     * Recupera le fatture filtrate per ID cliente e stato.
-     * @param clienteId ID del cliente.
-     * @param stato Lo stato della fattura.
-     * @param pageable Oggetto Pageable.
-     * @return Pagina di FattureDto.
-     */
-    public Page<FattureDto> findByClienteIdAndStato(Long clienteId, StatoFattura stato, Pageable pageable) {
-        // Qui clienteId è già Long, quindi lo passiamo direttamente
-        return fattureRepository.findByClienteIdAndStato(clienteId, stato, pageable).map(this::convertToDTO);
-    }
-
-    /**
-     * Recupera le fatture filtrate per ID cliente e data.
-     * @param clienteId ID del cliente.
-     * @param data La data della fattura.
-     * @param pageable Oggetto Pageable.
-     * @return Pagina di FattureDto.
-     */
-    public Page<FattureDto> findByClienteIdAndData(Long clienteId, LocalDate data, Pageable pageable) {
-        // Qui clienteId è già Long, quindi lo passiamo direttamente
-        return fattureRepository.findByClienteIdAndData(clienteId, data, pageable).map(this::convertToDTO);
-    }
-
-    /**
-     * Recupera le fatture filtrate per stato e data.
-     * @param stato Lo stato della fattura.
-     * @param data La data della fattura.
-     * @param pageable Oggetto Pageable.
-     * @return Pagina di FattureDto.
-     */
-    public Page<FattureDto> findByStatoAndData(StatoFattura stato, LocalDate data, Pageable pageable) {
-        return fattureRepository.findByStatoAndData(stato, data, pageable).map(this::convertToDTO);
-    }
-
-    /**
-     * Converte un'entità Fatture in un DTO FattureDto.
-     * @param fattura L'entità Fatture da convertire.
-     * @return Il DTO FattureDto risultante.
-     */
-    private FattureDto convertToDTO(Fatture fattura) {
-        FattureDto dto = new FattureDto();
-        dto.setData(fattura.getData());
-        dto.setImporto(fattura.getImporto());
-        dto.setNumero(fattura.getNumero());
-        dto.setStato(fattura.getStato());
-        if (fattura.getCliente() != null) {
-            // L'ID del Cliente è Integer, ma il DTO della Fattura lo vuole Long
-            dto.setClienteId(Long.valueOf(fattura.getCliente().getId()));
-        } else {
-            dto.setClienteId(null);
-        }
-        return dto;
-    }
-
-    /**
-     * Converte un DTO FattureDto in un'entità Fatture.
-     * @param dto Il DTO FattureDto da convertire.
-     * @return L'entità Fatture risultante.
-     * @throws NotFoundException Se il cliente specificato nell'ID non viene trovato.
-     * @throws BadRequestException Se l'ID del cliente è nullo nel DTO.
-     */
-    private Fatture convertToEntity(FattureDto dto) throws NotFoundException, BadRequestException {
         Fatture fattura = new Fatture();
-        fattura.setData(dto.getData());
-        fattura.setImporto(dto.getImporto());
-        fattura.setNumero(dto.getNumero());
-        fattura.setStato(dto.getStato());
+        fattura.setData(fattureDto.getData());
+        fattura.setImporto(fattureDto.getImporto());
+        fattura.setNumero(fattureDto.getNumero());
+        fattura.setStato(fattureDto.getStato());
+        fattura.setCliente(cliente);
 
-        if (dto.getClienteId() != null) {
-            // *** PUNTO DI CONVERSIONE ***
-            // Conversione da Long (dal DTO) a Integer (per il ClienteRepository/Cliente.id)
-            Cliente cliente = clienteRepository.findById(dto.getClienteId().intValue())
-                    .orElseThrow(() -> new NotFoundException("Cliente con id=" + dto.getClienteId() + " non trovato per la fattura."));
-            fattura.setCliente(cliente);
-        } else {
-            throw new BadRequestException("Cliente ID è obbligatorio per la fattura.");
+        return fattureRepository.save(fattura);
+    }
+
+    public Page<Fatture> getAllFatture(Pageable pageable) {
+        return fattureRepository.findAll(pageable);
+    }
+
+    public Fatture getFatturaById(int id) throws NotFoundException {
+        return fattureRepository.findById(id).orElseThrow(() -> new NotFoundException("Fattura con id=" + id + " non trovata."));
+    }
+
+    public Fatture updateFattura(int id, FattureDto fattureDto) throws NotFoundException {
+        Fatture fattura = getFatturaById(id);
+
+        if (fattureRepository.existsByNumeroAndIdNot(fattureDto.getNumero(), id)) {
+            throw new BadRequestException("Numero fattura '" + fattureDto.getNumero() + "' già esistente per un'altra fattura.");
         }
 
-        return fattura;
+        Cliente cliente = clienteService.findClienteById(fattureDto.getClienteId());
+
+        fattura.setData(fattureDto.getData());
+        fattura.setImporto(fattureDto.getImporto());
+        fattura.setNumero(fattureDto.getNumero());
+        fattura.setStato(fattureDto.getStato());
+        fattura.setCliente(cliente);
+
+        return fattureRepository.save(fattura);
     }
+
+    public void deleteFattura(int id) throws NotFoundException {
+        fattureRepository.delete(getFatturaById(id));
+    }
+    public Page<Fatture> findByStato(StatoFattura stato, Pageable pageable) { return fattureRepository.findByStato(stato, pageable); }
+    public Page<Fatture> findByData(LocalDate data, Pageable pageable) { return fattureRepository.findByData(data, pageable); }
+    public Page<Fatture> findByAnno(int anno, Pageable pageable) { return fattureRepository.findByAnno(anno, pageable); }
+    public Page<Fatture> findByImportoBetween(BigDecimal min, BigDecimal max, Pageable pageable) { return fattureRepository.findByImportoBetween(min, max, pageable); }
 }
