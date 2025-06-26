@@ -14,7 +14,7 @@ import java.time.LocalDate;
 public class Fatture {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @Column(nullable = false)
     private LocalDate data;

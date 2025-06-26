@@ -19,15 +19,16 @@ public class EpicEnergyServicesTeam4BwApplication {
             │ 💡 ENERGIA PER TUTTI... TRANNE PER CHI AMA I TESTING E IL SASS│
             │                                                               │
             │ 📝 AVVIA LA REGISTRAZIONE QUI:                                │
-            │     http://localhost:8080/register.html                       │
+            │     http://localhost:8080/html/register.html                  │
             │                                                               │
             │ 🔐 AVVIA IL LOGIN QUI:                                        │
-            │     http://localhost:8080/login.html                          │
+            │     http://localhost:8080/html/login.html                     │
             │                                                               │
             │ ☕ OFFRIMI UN CAFFÈ (O UNA FATTURA PAGATA):                    │
             │     https://www.paypal.com/paypalme/lucaf95                   │
             └───────────────────────────────────────────────────────────────┘
             """);
 	}
+
 
 }
