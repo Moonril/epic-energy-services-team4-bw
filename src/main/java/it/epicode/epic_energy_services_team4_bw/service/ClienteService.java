@@ -2,6 +2,7 @@ package it.epicode.epic_energy_services_team4_bw.service;
 import com.cloudinary.Cloudinary;
 import it.epicode.epic_energy_services_team4_bw.dto.ClienteDTO;
 import it.epicode.epic_energy_services_team4_bw.dto.IndirizzoDto;
+import it.epicode.epic_energy_services_team4_bw.enums.TipoSede;
 import it.epicode.epic_energy_services_team4_bw.exception.BadRequestException;
 import it.epicode.epic_energy_services_team4_bw.exception.NotFoundException;
 import it.epicode.epic_energy_services_team4_bw.model.Cliente;
@@ -149,10 +150,11 @@ public class ClienteService {
         return clienteRepository.findAll(pageable);
     }
 
-    public Page<Cliente> getClientiOrdinatiPerProvincia(int page, int size) {
+    public Page<Cliente> getClientiOrdinatiPerProvinciaSedeLegale(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return clienteRepository.findAllOrderByProvincia(pageable);
+        return clienteRepository.findAllOrderByProvinciaSedeLegale(TipoSede.SEDE_LEGALE, pageable);
     }
+
 
 
     private void sendMail(String email, Cliente cliente) {
