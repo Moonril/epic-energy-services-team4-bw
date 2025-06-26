@@ -1,5 +1,6 @@
 package it.epicode.epic_energy_services_team4_bw.dto;
 
+import it.epicode.epic_energy_services_team4_bw.enums.TipoSede;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -12,6 +13,8 @@ public class IndirizzoDto {
     private String civico;
     @NotEmpty(message = "La località dell'indirizzo non può essere vuota")
     private String localita;
+    @NotNull(message = "Il tipo sede non può essere nullo")
+    private TipoSede tipoSede;
     @NotNull(message = "Il comune deve essere specificato")
     private int comuneId;
     @NotEmpty(message = "Il cap dev'essere specificato")

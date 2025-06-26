@@ -1,5 +1,6 @@
 package it.epicode.epic_energy_services_team4_bw.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.epicode.epic_energy_services_team4_bw.enums.StatoFattura;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -23,7 +24,7 @@ public class Fatture {
 
     @Column(nullable = false, unique = true)
     private String numero;
-
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cliente_id", nullable = false)
     private Cliente cliente;

@@ -4,6 +4,7 @@ import com.cloudinary.Cloudinary;
 
 import it.epicode.epic_energy_services_team4_bw.dto.IndirizzoDto;
 import it.epicode.epic_energy_services_team4_bw.exception.NotFoundException;
+import it.epicode.epic_energy_services_team4_bw.model.Cliente;
 import it.epicode.epic_energy_services_team4_bw.model.Comune;
 import it.epicode.epic_energy_services_team4_bw.model.Indirizzo;
 import it.epicode.epic_energy_services_team4_bw.repository.IndirizzoRepository;
@@ -31,27 +32,29 @@ public class IndirizzoService {
     private ComuneService comuneService;
     @Autowired
     private JavaMailSenderImpl javaMailSender;
+    @Autowired
+    private ClienteService clienteService;
 
     //Metodo Save
-    public Indirizzo saveIndirizzo(IndirizzoDto indirizzoDto) throws NotFoundException {
+    public Indirizzo saveIndirizzo(int clienteId, IndirizzoDto indirizzoDto) throws NotFoundException {
+        Cliente cliente = clienteService.findClienteById(clienteId);
+        Comune comune = comuneService.getComune(indirizzoDto.getComuneId());
+
         Indirizzo indirizzo = new Indirizzo();
         indirizzo.setVia(indirizzoDto.getVia());
         indirizzo.setCivico(indirizzoDto.getCivico());
         indirizzo.setLocalita(indirizzoDto.getLocalita());
         indirizzo.setCap(indirizzoDto.getCap());
-        Comune comune = comuneService.getComune(indirizzoDto.getComuneId());
-
+        indirizzo.setTipoSede(indirizzoDto.getTipoSede());
         indirizzo.setComune(comune);
-        //setto la mia email per farmi arrivare la conferma
-//        sendMail("lucaferr95@gmail.com");
+        indirizzo.setCliente(cliente);
 
         return indirizzoRepository.save(indirizzo);
     }
 
     //Metodo getAll con paginazione
 
-    public Page<Indirizzo> getAllIndirizzi(int page, int size, String sortBy) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
+    public Page<Indirizzo> getAllIndirizzi(Pageable pageable) {
         return indirizzoRepository.findAll(pageable);
     }
 
@@ -63,9 +66,15 @@ public class IndirizzoService {
     }
     //Metodo update
     public Indirizzo updateIndirizzo(int id, IndirizzoDto indirizzoDto) throws NotFoundException {
-        Indirizzo indirizzoDaAggiornare = getIndirizzo(id);
-        return indirizzoRepository.save(indirizzoDaAggiornare);
-
+        Indirizzo indirizzo = getIndirizzo(id);
+        Comune comune = comuneService.getComune(indirizzoDto.getComuneId());
+        indirizzo.setVia(indirizzoDto.getVia());
+        indirizzo.setCivico(indirizzoDto.getCivico());
+        indirizzo.setLocalita(indirizzoDto.getLocalita());
+        indirizzo.setCap(indirizzoDto.getCap());
+        indirizzo.setTipoSede(indirizzoDto.getTipoSede());
+        indirizzo.setComune(comune);
+        return indirizzoRepository.save(indirizzo);
     }
 
     //metodo delete indirizzo
