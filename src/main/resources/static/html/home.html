@@ -24,11 +24,50 @@
         .logout:hover {
             background-color: #990000;
         }
+
+        .ricerca-button {
+            margin: 20px;
+            padding: 10px 20px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: green;
+        }
+
+        .result-area {
+            margin-top: 30px;
+            text-align: left;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .div-clienti {
+<!--            border: 1px solid black;-->
+            border-radius: 5px;
+            padding: 10px;
+            margin: 15px;
+        }
+        span {
+            font-weight: bold;
+        }
+        .reset-button {
+            margin: 20px;
+            padding: 10px 20px;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: cornflowerblue;
+        }
     </style>
     <script>
         window.onload = function () {
             const token = localStorage.getItem("token");
-
             if (!token) {
                 alert("Non sei autenticato!");
                 window.location.href = "login.html";
@@ -39,11 +78,195 @@
             localStorage.removeItem("token");
             window.location.href = "login.html";
         }
+
+        async function getClienti() {
+            const token = localStorage.getItem("token");
+            const url = "http://localhost:8080/clienti";
+
+            try {
+                const response = await fetch(url + "?page=0&size=10&sortBy=id", {
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                });
+
+                if (!response.ok) throw new Error("errore nella fetch: " + response.status);
+
+                const data = await response.json();
+
+                const clientiList = data.content.map(cliente =>
+                    `
+                    <div class="div-clienti">
+                        <ul>
+                            <p><span>Ragione Sociale:</span> ${cliente.ragioneSociale} ${cliente.tipoCliente}</p>
+                            <p><span>Email:</span> ${cliente.email}</p>
+                            <p><span>Fatturato Annuale:</span> ${cliente.fatturatoAnnuale}</p>
+                            <p><span>Numero di telefono:</span> ${cliente.telefono}</p>
+                        </ul>
+                    </div>`
+                ).join("");
+
+                document.getElementById("result").innerHTML =
+                    `<h3>Clienti:</h3><ul>${clientiList}</ul>`;
+
+            } catch (error) {
+                console.error("Errore:", error);
+                document.getElementById("result").innerHTML =
+                    `<p style="color:red;">Errore: ${error.message}</p>`;
+            }
+        }
+
+        async function getUtenti() {
+            const token = localStorage.getItem("token");
+            const url = "http://localhost:8080/utenti";
+
+            try {
+                const response = await fetch(url + "?page=0&size=10&sortBy=id", {
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                });
+
+                if (!response.ok) throw new Error("Errore nella fetch: " + response.status);
+
+                const data = await response.json();
+
+                const utentiList = data.content.map(utente =>
+                    `
+                    <div class="div-clienti">
+                        <ul>
+                            <p><span>Nome:</span> ${utente.nome}</p>
+                            <p><span>Cognome:</span> ${utente.cognome}</p>
+                            <p><span>Email:</span> ${utente.email}</p>
+                            <p><span>Username:</span> ${utente.username}</p>
+                            <p><span>Tipo Utente:</span> ${utente.tipoUtente}</p>
+                        </ul>
+                    </div>`
+                ).join("");
+
+                document.getElementById("result").innerHTML =
+                    `<h3>Utenti:</h3><ul>${utentiList}</ul>`;
+
+            } catch (error) {
+                console.error("Errore:", error);
+                document.getElementById("result").innerHTML =
+                    `<p style="color:red;">Errore: ${error.message}</p>`;
+            }
+        }
+                async function getIndirizziSedeLegale() {
+            const token = localStorage.getItem("token");
+            const url = "http://localhost:8080/indirizzi";
+
+            try {
+                const response = await fetch(url + "?page=0&size=20&sortBy=id", {
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                });
+
+                if (!response.ok) throw new Error("Errore nella fetch: " + response.status);
+
+                const data = await response.json();
+
+                // Filtra solo gli indirizzi di tipo SEDE_LEGALE
+                const indirizziSedeLegale = data.content.filter(indirizzo => indirizzo.tipo === "SEDE_LEGALE");
+
+                if (indirizziSedeLegale.length === 0) {
+                    document.getElementById("result").innerHTML = `<p>Nessuna sede legale trovata.</p>`;
+                    return;
+                }
+
+                const listaHTML = indirizziSedeLegale.map(indirizzo =>
+                    `
+                    <div class="div-clienti">
+                        <ul>
+                            <p><span>Via:</span> ${indirizzo.via}</p>
+                            <p><span>Civico:</span> ${indirizzo.civico}</p>
+                            <p><span>Località:</span> ${indirizzo.localita}</p>
+                            <p><span>CAP:</span> ${indirizzo.cap}</p>
+                            <p><span>Tipo:</span> ${indirizzo.tipo}</p>
+                            <p><span>Comune:</span> ${indirizzo.comuneId}</p>
+                        </ul>
+                    </div>`
+                ).join("");
+
+                document.getElementById("result").innerHTML =
+                    `<h3>Indirizzi - Sedi Legali:</h3><ul>${listaHTML}</ul>`;
+
+            } catch (error) {
+                console.error("Errore:", error);
+                document.getElementById("result").innerHTML =
+                    `<p style="color:red;">Errore: ${error.message}</p>`;
+            }
+        }
+
+            async function getFatture() {
+            const token = localStorage.getItem("token");
+            const url = "http://localhost:8080/fatture";
+<!--            const url = "http://localhost:8080/fatture?page=0&size=10&sortBy=id"";-->
+
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        "Authorization": "Bearer " + token
+                    }
+                });
+
+                if (!response.ok) throw new Error("Errore nella fetch: " + response.status);
+
+                const data = await response.json();
+
+                const fattureList = data.content.map(fattura =>
+                    `
+                    <div class="div-clienti">
+                        <ul>
+                            <li><span>ID:</span> ${fattura.id}</li>
+                            <li><span>Data:</span> ${fattura.data}</li>
+                            <li><span>Importo:</span> € ${fattura.importo}</li>
+                            <li><span>Numero:</span> ${fattura.numero}</li>
+                            <li><span>Stato:</span> ${fattura.stato}</li>
+<!--                            <li><span>Cliente:</span> ${fattura.cliente?.ragioneSociale || "N/A"}</li>-->
+                        </ul>
+                    </div>
+                    `
+                ).join("");
+
+                document.getElementById("result").innerHTML =
+                    `<h3>Fatture:</h3>${fattureList}`;
+
+            } catch (error) {
+                console.error("Errore:", error);
+                document.getElementById("result").innerHTML =
+                    `<p style="color:red;">Errore: ${error.message}</p>`;
+            }
+        }
+
+        function resetResult() {
+            document.getElementById("result").innerHTML = "";
+        }
+
     </script>
 </head>
 <body>
 <h1>Benvenuto nella Home!</h1>
 <p>Hai effettuato l’accesso con successo.</p>
 <button class="logout" onclick="logout()">Logout</button>
+
+<h3>Effettua una ricerca:</h3>
+<div>
+    <button class="ricerca-button" onclick="getClienti()">Clienti</button>
+    <button class="ricerca-button" onclick="getUtenti()">Utenti</button>
+    <button class="ricerca-button" onclick="getIndirizziSedeLegale()">Sedi Legali</button>
+    <button class="ricerca-button" onclick="getFatture()">Fatture</button>
+</div>
+
+
+<div class="result-area" id="result">
+    <!-- Risultati qui -->
+</div>
+<div>
+    <button class="reset-button"  onclick="resetResult()">Reset</button>
+</div>
+
 </body>
 </html>
