@@ -5,7 +5,7 @@
     <title>Registrati</title>
     <style>
         body {
-          background-color: #f0f4f8;
+          background-color: #e8f0ff;
           font-family: Arial, sans-serif;
           display: flex;
           justify-content: center;
@@ -61,19 +61,16 @@
           background-color: #003f80;
         }
     </style>
+    <link rel="stylesheet" href="header.css" />
 </head>
 <body>
+<header id="header" class="alt">
+    <a href="home.html" class="logo"><strong>Epic Energies</strong> <span>by TEAM 4</span></a>
+
+</header>
 <div class="register-container">
     <h2>Registrati</h2>
     <form id="registerForm">
-        <label>
-            Username:
-            <input type="text" name="username" required />
-        </label>
-        <label>
-            Password:
-            <input type="password" name="password" required />
-        </label>
         <label>
             Nome:
             <input type="text" name="nome" required />
@@ -82,9 +79,20 @@
             Cognome:
             <input type="text" name="cognome" required />
         </label>
+        <label>
+            Username:
+            <input type="text" name="username" required />
+        </label>
+        <label>
+            Password:
+            <input type="password" name="password" required />
+        </label>
+
         <button type="submit">Registrati</button>
     </form>
-        <a href="login.html">Già registrato? Log In</a>
+    <p>
+        <a href="login.html">Già registrato? Vai al Log In</a>
+    </p>
 </div>
 
 <script>

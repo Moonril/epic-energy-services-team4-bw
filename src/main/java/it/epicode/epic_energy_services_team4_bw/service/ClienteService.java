@@ -92,6 +92,8 @@ public class ClienteService {
             }
             indirizzoRepository.saveAll(indirizziDaAssociare);
         }
+
+        sendMail("girzzo@gmail.com", cliente);
         return clienteRepository.findById(savedCliente.getId()).get();
     }
 

@@ -57,10 +57,10 @@ public class ClienteController {
     @GetMapping("/filtro")
     @PreAuthorize("hasAuthority('ADMIN')")
     public List<Cliente> filtraClienti(
-            @RequestParam BigDecimal fatturatoMin,
-            @RequestParam LocalDate dataInserimento,
-            @RequestParam LocalDate dataUltimoContatto,
-            @RequestParam String parteNome
+            @RequestParam(required = false) BigDecimal fatturatoMin,
+            @RequestParam(required = false)  LocalDate dataInserimento,
+            @RequestParam(required = false)  LocalDate dataUltimoContatto,
+            @RequestParam(required = false)  String parteNome
             ){
         return clienteService.filtraClienti(fatturatoMin, dataInserimento, dataUltimoContatto, parteNome);
     }

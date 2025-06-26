@@ -45,7 +45,7 @@ public class Cliente {
     @OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL)
     private List<Indirizzo> indirizzi=new ArrayList<>();
 
-    @JsonIgnore //da verificare
+
     @OneToMany(mappedBy = "cliente",cascade = CascadeType.ALL)
     private List<Fatture> fatture=new ArrayList<>();
 
