@@ -79,6 +79,13 @@ public class UtenteService {
     }
 
     public String patchUtente(int id, MultipartFile file) throws NotFoundException, IOException {
+
+        Utente utenteAutenticato = (Utente) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (!utenteAutenticato.getTipoUtente().name().equals("ADMIN") && utenteAutenticato.getId() != id) {
+            throw new UnauthorizedException("Non puoi modificare un altro utente.");
+        }
+
         Utente utenteDaPatchare = getUtente(id);
 
         String url = (String)cloudinary.uploader().upload(file.getBytes(),

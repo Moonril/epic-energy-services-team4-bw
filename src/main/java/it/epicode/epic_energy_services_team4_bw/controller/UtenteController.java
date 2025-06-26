@@ -38,7 +38,7 @@ public class UtenteController {
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('USER')")
     public Utente getUtente(@PathVariable int id) throws NotFoundException {
         return utenteService.getUtente(id);
     }
@@ -66,6 +66,7 @@ public class UtenteController {
     }
 
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAuthority('USER')")
     public String patchUtente(@PathVariable int id, @RequestBody MultipartFile file)
             throws NotFoundException, IOException {
         return utenteService.patchUtente(id, file);
