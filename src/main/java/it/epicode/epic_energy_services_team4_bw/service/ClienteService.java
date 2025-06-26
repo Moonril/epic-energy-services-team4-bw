@@ -60,10 +60,12 @@ public class ClienteService {
         return clienteRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Cliente con id=" + id + " non trovato."));
     }
+    @Transactional
     public Cliente saveCliente(ClienteDTO clienteDTO) throws NotFoundException {
-        clienteRepository.findByPartitaIva(clienteDTO.getPartitaIva()).ifPresent(cliente -> {
+        clienteRepository.findByPartitaIva(clienteDTO.getPartitaIva()).ifPresent(c -> {
             throw new BadRequestException("Partita IVA " + clienteDTO.getPartitaIva() + " già esistente.");
         });
+
         Cliente cliente = new Cliente();
         cliente.setRagioneSociale(clienteDTO.getRagioneSociale());
         cliente.setPartitaIva(clienteDTO.getPartitaIva());
@@ -82,24 +84,15 @@ public class ClienteService {
 
         if (clienteDTO.getIndirizziId() != null && !clienteDTO.getIndirizziId().isEmpty()) {
             List<Indirizzo> indirizziDaAssociare = indirizzoRepository.findAllById(clienteDTO.getIndirizziId());
-            if (indirizziDaAssociare.size() != clienteDTO.getIndirizziId().size()) {
-                throw new NotFoundException("Uno o più ID di indirizzi forniti non sono stati trovati.");
-            }
+            if (indirizziDaAssociare.size() != clienteDTO.getIndirizziId().size()) throw new NotFoundException("Uno o più ID di indirizzi forniti non sono stati trovati.");
             for (Indirizzo indirizzo : indirizziDaAssociare) {
-                if (indirizzo.getCliente() != null) {
-                    throw new BadRequestException("L'indirizzo con id=" + indirizzo.getId() + " è già associato ad un altro cliente.");
-                }
+                if (indirizzo.getCliente() != null) throw new BadRequestException("L'indirizzo con id=" + indirizzo.getId() + " è già associato.");
                 indirizzo.setCliente(savedCliente);
-                savedCliente.getIndirizzi().add(indirizzo);
             }
             indirizzoRepository.saveAll(indirizziDaAssociare);
         }
-
-        sendMail("girzzo@gmail.com", cliente);
-
-        return clienteRepository.save(cliente);
+        return clienteRepository.findById(savedCliente.getId()).get();
     }
-
 
 
     public Cliente updateCliente(int id, ClienteDTO clienteDTO) throws NotFoundException {
@@ -116,7 +109,6 @@ public class ClienteService {
         cliente.setNomeContatto(clienteDTO.getNomeContatto());
         cliente.setCognomeContatto(clienteDTO.getCognomeContatto());
         cliente.setTipoCliente(clienteDTO.getTipoCliente());
-
         return clienteRepository.save(cliente);
     }
 

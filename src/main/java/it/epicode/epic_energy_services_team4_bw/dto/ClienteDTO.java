@@ -1,5 +1,6 @@
 package it.epicode.epic_energy_services_team4_bw.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import it.epicode.epic_energy_services_team4_bw.enums.TipoCliente;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -13,7 +14,8 @@ import java.util.List;
 
 @Data
     public class ClienteDTO {
-
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private int id;
         @NotBlank(message = "La ragione sociale non può essere vuota")
         @Size(min = 3, max = 100, message = "La ragione sociale deve avere tra 3 e 100 caratteri")
         private String ragioneSociale;
