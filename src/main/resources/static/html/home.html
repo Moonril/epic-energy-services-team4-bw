@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f9ff;
+            padding: 50px;
+            text-align: center;
+        }
+
+        .logout {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #cc0000;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .logout:hover {
+            background-color: #990000;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                alert("Non sei autenticato!");
+                window.location.href = "login.html";
+            }
+        };
+
+        function logout() {
+            localStorage.removeItem("token");
+            window.location.href = "login.html";
+        }
+    </script>
+</head>
+<body>
+<h1>Benvenuto nella Home!</h1>
+<p>Hai effettuato l’accesso con successo.</p>
+<button class="logout" onclick="logout()">Logout</button>
+</body>
+</html>

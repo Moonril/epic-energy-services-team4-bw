@@ -24,15 +24,17 @@
         label {
             color: #003366;
             font-weight: bold;
+
         }
 
         input[type="text"],
         input[type="password"] {
             width: 100%;
-            padding: 8px 0px 8px 0px;
+            padding: 8px;
             margin: 8px 0 16px;
             border: 1px solid #ccc;
             border-radius: 5px;
+            padding: 8px 0px 8px 0px;
         }
 
         button {
@@ -49,34 +51,41 @@
         button:hover {
             background-color: #0052a3;
         }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
     </style>
 
     <script>
         async function inviaDati() {
-            let username = document.getElementById("username").value;
-            let password = document.getElementById("password").value;
-            console.log(username);
-            console.log(password);
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const errorMsg = document.getElementById("error-msg");
+            errorMsg.textContent = "";
 
-            const url = "http://localhost:8080/auth/login";
             try {
-                const request = new Request(url, {
+                const response = await fetch("http://localhost:8080/auth/login", {
                     method: "POST",
                     headers: {
                         "Content-Type": "application/json",
                     },
-                    body: JSON.stringify({ "username": username, "password": password }),
+                    body: JSON.stringify({ username, password }),
                 });
 
-                const response = await fetch(request);
-                if (!response.ok) {
-                    throw new Error(`Response status: ${response.status}`);
-                }
+                if (!response.ok) throw new Error("Credenziali non valide");
 
-                const text = await response.text();
-                console.log(text);
+                const token = await response.text();
+
+
+                localStorage.setItem("token", token);
+
+
+                window.location.href = "home.html";
+
             } catch (error) {
-                console.error(error.message);
+                errorMsg.textContent = "Login fallito: " + error.message;
             }
         }
     </script>
@@ -84,15 +93,16 @@
 <body>
 
 <div class="login-container">
-    <form>
     <label for="username">Username</label>
-    <input id="username" name="username" type="text">
+    <input id="username" type="text">
 
     <label for="password">Password</label>
-    <input id="password" name="password" type="password">
+    <input id="password" type="password">
 
     <button onclick="inviaDati()">Login</button>
-    </form>
+    <div id="error-msg" class="error"></div>
+
+    <a href="register.html">Registrati</a>
 </div>
 
 </body>
