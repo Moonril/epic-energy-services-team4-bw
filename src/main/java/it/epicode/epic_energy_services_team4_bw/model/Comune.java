@@ -1,6 +1,7 @@
 package it.epicode.epic_energy_services_team4_bw.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -22,6 +23,7 @@ public class Comune {
     @JoinColumn(name = "provincia_id")
     private Provincia provincia;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "comune")
     private List<Indirizzo> indirizzi = new ArrayList<>();
 
