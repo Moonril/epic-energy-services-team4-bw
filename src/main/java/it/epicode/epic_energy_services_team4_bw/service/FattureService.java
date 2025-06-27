@@ -78,4 +78,5 @@ public class FattureService {
     public Page<Fatture> findByData(LocalDate data, Pageable pageable) { return fattureRepository.findByData(data, pageable); }
     public Page<Fatture> findByAnno(int anno, Pageable pageable) { return fattureRepository.findByAnno(anno, pageable); }
     public Page<Fatture> findByImportoBetween(BigDecimal min, BigDecimal max, Pageable pageable) { return fattureRepository.findByImportoBetween(min, max, pageable); }
+    public Page<Fatture> findByClienteId(int clienteId, Pageable pageable){return fattureRepository.findByClienteId(clienteId,pageable);}
 }

@@ -69,24 +69,36 @@ public class FattureController {
     }
 
     // --- Endpoint di Filtro ---
+
+    //FILTRO PER CLIENTE
+    @GetMapping("/filtro/{clienteId}")
+    @PreAuthorize("hasAnyAuthority('ADMIN','USER')")
+    public Page<Fatture> getFattureByClienteId(@PathVariable int clienteId,Pageable pageable){
+        return fattureService.findByClienteId(clienteId,pageable);
+    }
+
+    //FILTRO PER STATO
     @GetMapping("/filtro/stato")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public Page<Fatture> getFattureByStato(@RequestParam StatoFattura stato, Pageable pageable) {
         return fattureService.findByStato(stato, pageable);
     }
 
+    //FILTRO PER DATA FATTURA
     @GetMapping("/filtro/data")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public Page<Fatture> getFattureByData(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data, Pageable pageable) {
         return fattureService.findByData(data, pageable);
     }
 
+    //FILTRO PER ANNO
     @GetMapping("/filtro/anno")
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+//    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public Page<Fatture> getFattureByAnno(@RequestParam int anno, Pageable pageable) {
         return fattureService.findByAnno(anno, pageable);
     }
 
+    //FILTRO PER RANGE DI IMPORTI
     @GetMapping("/filtro/importo")
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
     public Page<Fatture> getFattureByImportoBetween(@RequestParam BigDecimal min, @RequestParam BigDecimal max, Pageable pageable) {
