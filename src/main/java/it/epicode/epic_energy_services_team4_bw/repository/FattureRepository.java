@@ -20,18 +20,15 @@ public interface FattureRepository extends JpaRepository<Fatture, Integer> {
 
     Page<Fatture> findByData(LocalDate data, Pageable pageable);
 
-    @Query("SELECT f FROM Fatture f WHERE FUNCTION('YEAR', f.data) = :anno")
+    @Query("SELECT f FROM Fatture f WHERE EXTRACT(YEAR FROM f.data) = :anno")
     Page<Fatture> findByAnno(@Param("anno") int anno, Pageable pageable);
+
+
 
     Page<Fatture> findByImportoBetween(BigDecimal importoMin, BigDecimal importoMax, Pageable pageable);
 
 
-    Page<Fatture> findByClienteIdAndStato(int clienteId, StatoFattura stato, Pageable pageable);
-
-
-    Page<Fatture> findByClienteIdAndData(int clienteId, LocalDate data, Pageable pageable);
-
-    Page<Fatture> findByStatoAndData(StatoFattura stato, LocalDate data, Pageable pageable);
+    Page<Fatture> findByClienteId(int clienteId, Pageable pageable);
 
 
     @Query("SELECT COUNT(f) > 0 FROM Fatture f WHERE f.numero = :numero AND (:id IS NULL OR f.id <> :id)")
