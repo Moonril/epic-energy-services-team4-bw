@@ -104,6 +104,7 @@
                             <p><span>Email:</span> ${cliente.email}</p>
                             <p><span>Fatturato Annuale:</span> ${cliente.fatturatoAnnuale}</p>
                             <p><span>Numero di telefono:</span> ${cliente.telefono}</p>
+                            <p><span>Nome contatto:</span> ${cliente.nomeContatto} ${cliente.cognomeContatto}</p>
 
                     </div>`
                 ).join("");
@@ -135,15 +136,14 @@
 
                 const utentiList = data.content.map(utente =>
                     `
-                    <div class="div-clienti">
-
-                            <p><span>Nome:</span> ${utente.nome}</p>
-                            <p><span>Cognome:</span> ${utente.cognome}</p>
-                            <p><span>Email:</span> ${utente.email}</p>
-                            <p><span>Username:</span> ${utente.username}</p>
-                            <p><span>Tipo Utente:</span> ${utente.tipoUtente}</p>
-
-                    </div>`
+                   <div class="div-clienti">
+						<p><span>Nome:</span> ${utente.nome}</p>
+						<p><span>Cognome:</span> ${utente.cognome}</p>
+						<p><span>Email:</span> ${utente.email}</p>
+						<p><span>Username:</span> ${utente.username}</p>
+						<p><span>Tipo Utente:</span> ${utente.tipoUtente}</p>
+					</div>
+						`
                 ).join("");
 
                 document.getElementById("result").innerHTML =
